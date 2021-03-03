@@ -1,0 +1,26 @@
+<!--
+Dylan Xu, Mx. Martin, M545c
+Game website prototype 0.5
+-->
+
+{% extends 'base.html' %}
+
+{% block title %}
+	<title> Game Lobby </title>
+{% endblock %}
+
+{% block body %}
+	<script>
+		function deleteLobby() {
+			var xhttp = new XMLHttpRequest();
+			xhttp.open('POST', "endGame", true);
+			xhttp.send();
+			window.location.href = 'homepage';
+		}
+	</script>
+	<h5 class="sub-header"> Game ID: {{gameID}} </h5>
+	<div class="center">
+		<button type="button" id="deleteLobby" onClick="deleteLobby();"> Delete Lobby </button>
+		<p> Users in lobby: </p>
+	</div>
+{% endblock %}

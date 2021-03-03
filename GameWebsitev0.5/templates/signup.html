@@ -1,0 +1,29 @@
+<!--
+Dylan Xu, Mx. Martin, M545c
+Game website prototype 0.5
+-->
+
+{% extends 'base.html' %}
+
+{% block title %}
+	<title> Leaderboard </title>
+{% endblock %}
+
+{% block body %}
+	<h1 class="header"> Create an Account </h1>
+	<p class="sub-header"> You must create an account to play on this website. All usernames must be unique. </p>
+	<div class="center">
+		{% if usernameTaken: %} <!-- each account must have a unique username to establish identification -->
+			<p class="error"> That username is already taken. </p>
+		{% endif %}
+		<form method="POST" action="signup">
+			<p> Username: </p> <!-- inputs -->
+			<input type="text" name="username" required />
+			<p> Password: </p>
+			<input type="text" name="password" required /> <br/> <br/>
+			<input type="submit" value="Submit" />
+		</form>
+		<br/>
+		<form action="."> <input type="submit" class="button" value="Return to Homepage" /> </form>
+	</div>
+{% endblock %}

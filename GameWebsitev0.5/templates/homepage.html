@@ -1,0 +1,67 @@
+<!--
+Dylan Xu, Mx. Martin, M545c
+Game website prototype 0.5
+-->
+
+{% extends 'base.html' %}
+
+{% block title %}
+	<title> Homepage </title>
+{% endblock %}
+
+{% block body %}
+	<!-- Resources used to learn JavaScript in HTML: W3C, Stack Overflow, the mini-lessons
+	https://stackoverflow.com/questions/24075219/javascript-code-to-count-number-of-clicks-on-a-button one such resource-->
+	<script>
+		var clicked = 0; //keeps track of how often the button is clicked; init value from server
+		/*
+		function countClick() {
+			clicked += 1;
+			if(clicked == 10) {
+				changeClicks();
+				clicked = 0;
+			}
+		};
+		function forceChange() {
+			for(i = 0; i < clicked; i++) {
+				changeClicks();
+			}
+		};
+		*/
+		function changeDisplay(clicks) {
+			var display = document.getElementById("clickDisplay")
+			display.innerHTML = "Total Clicks: " + clicks;
+		};
+		//setting up AJAX request
+		function changeClicks() {
+			var xhttp = new XMLHttpRequest();
+			//called after each POST request returns
+			xhttp.onreadystatechange = function() {
+				if(this.readyState == 4 && this.status == 200) {
+					clicked = parseInt(this.responseText);
+					changeDisplay(this.responseText);
+				}
+			}
+			xhttp.open('POST', "changeClicks", true);
+			xhttp.send();
+		}
+	</script>
+	
+	<div class="center">
+	<p> Username: {{username}} </p>
+	<button type="button" id="clicker" onClick="<!-- changeClicks(); -->"> Enter Random Game </button>
+	<p> Enter Game with Code </p>
+	<form method="POST" action="enterGame">
+		<p> Code/Game ID: </p>
+		<input type="number" id="gameCode" required />
+		<input type="submit" value="Submit" />
+	</form>
+	<br />
+	<form method="POST" action="lobby"> <input type="submit" value="Create New Game" /> </form>
+	<br />
+	<form method="POST" action="logout">
+		<input type="submit" value="Log Out" />
+	</form>
+	</div>
+	
+{% endblock %}
