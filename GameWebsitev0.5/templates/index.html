@@ -1,0 +1,30 @@
+<!--
+Dylan Xu, Mx. Martin, M545c
+Game website prototype 0.5
+-->
+
+{% extends 'base.html' %}
+
+{% block title %}
+	<title> Game name </title>
+{% endblock %}
+
+{% block body %}
+	<h1 class="header"> Game name </h1>
+	<h3 class="sub-header"> An online spin on the classic game "Apples to Apples". Sign up free to play now! </h3>
+	<div class="center">
+		{% if failedLogin: %} <!-- this is a redirect check: any non-valid attempt to enter /homepage redirects here -->
+			<p class="error"> Your username and/or password was incorrect. Please try again. </p>
+		{% endif %}
+		<form method="POST" action="login">
+			<p> Username: </p>
+			<input type="text" name="username" required />
+			<p> Password: </p>
+			<input type="password" name="password" required /> <br/> <br/>
+			<input type="submit" value="Login" />
+		</form> <br/>
+		<form method="GET" action="signup"> <!-- get indicates we're first reaching the page -->
+			<input type="submit" value="Sign up" />
+		</form>
+	</div>
+{% endblock %}
