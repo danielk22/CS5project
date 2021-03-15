@@ -1,0 +1,12 @@
+{
+    "name": "2dgames",
+    "version": "1.0.0",
+    "scripts": {
+        "start": "node app.js"
+    },
+    "dependencies": {
+        "express": "^4.17.1",
+        "socket.io": "^3.0.3"
+    },
+    "author": "Daniel Kurlander and Dylan Xu"
+}
