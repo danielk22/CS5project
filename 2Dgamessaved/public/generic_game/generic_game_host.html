@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>2Dgames</title>
+  </head>
+
+  <h1> Welcome to 2Dgames </h1>
+  <h3> You are a generic game host </h3>
+  <body>
+      <h3 id = "gameID"></h3>
+      <table id = "players">
+        <tr>
+          <th>Name</th> <th>Score</th>
+        </tr>
+      </table>
+      <button type = "button" onclick = "startGame()">Start Game!</button>
+      <h3 id = "startMessage"></h3>
+      <ol id = "welcomeList"></ol>
+  </body>
+  
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="generic_game_host.js"></script>
+</html>

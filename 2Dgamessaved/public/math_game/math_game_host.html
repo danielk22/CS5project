@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>2Dgames</title>
+  </head>
+
+  <h1> Welcome to 2Dgames </h1>
+  <h3> Welcome to our fast adding challenge!</h3>
+  <body>
+    <div id = "pageIntro">
+      <h3 id = "gameID"></h3>
+      <table id = "players">
+        <tr>
+          <th>Name</th> <th>Score</th>
+        </tr>
+      </table>
+      <button type = "button" onclick = "startGame()">Start Game!</button>
+      <ol id = "welcomeList"></ol>
+    </div>
+    <div id = "gameScreen" style = "display: none;">
+      <table id = "players2">
+        <tr>
+          <th>Name</th> <th>Score</th>
+        </tr>
+    </div>
+  </body>
+  
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="math_game_host.js"></script>
+</html>

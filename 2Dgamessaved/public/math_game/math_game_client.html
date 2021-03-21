@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Fun Math Game</title>
+    </head>
+    <body>
+        <h1>Welcome To The Fun Math Game</h1>
+        <h3 id = "gameStatus">Get ready to play!</h3>
+        <h2 id = "round"></h2>
+        <h3 id = "mathQuestion"></h3>
+        <label> Answer: </label> <br/>
+    <input type = "text" id = "answerBox" /> <br/> <br/>
+    <button type = "button" onclick = "sendAnswer()">Submit</button>
+    </body>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="math_game_client.js"></script>
+</html>
