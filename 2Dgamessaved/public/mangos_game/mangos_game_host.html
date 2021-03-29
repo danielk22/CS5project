@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>2Dgames</title>
+  </head>
+
+  <h1> Welcome to 2Dgames </h1>
+  <h3> You are a Mangos to Mangos game host </h3>
+  <body>
+      <h3 id = "gameID"></h3>
+      <table id = "players">
+        <tr>
+          <th>Name</th> <th>Score</th>
+        </tr>
+      </table>
+      <button type = "button" onclick = "startGame()">Start Game!</button>
+      <h3 id = "startMessage"></h3>
+      <ol id = "welcomeList"></ol>
+      <iframe id = "redCards" src = "XVR27's Apples To Apples Page - Alphabetical List - Red Apples (With Flavor Text).html" width = "500" height = "500" onload = "storeRed();"></iframe>
+      <iframe id = "greenCards" src = "XVR27's Apples To Apples Page - Alphabetical List - Green Apples (With Synonyms).html" width = "500" height = "500" onload = "storeGreen();"></iframe>
+  </body>
+  
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="mangos_game_host.js"></script>
+</html>

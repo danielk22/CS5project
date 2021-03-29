@@ -21,8 +21,12 @@ io.on('connection', function(socket) {
 
     socket.on('serverRegisterNewGame', function(message) { //message is the game descriptor
         console.log(`Got a serverRegisterNewGame event with the message ${message}`);
-        var gameID = generateGameID(IDlength);
-        myGames[gameID] = message; //MAKE SURE ONLY ONE GAME FOR EACH CODE
+        var gameID;
+        do {
+            gameID = generateGameID(IDlength);
+            console.log(`GameID = ${gameID} and myGames[gameID] = ${myGames[gameID]}`);
+        } while (myGames[gameID] !== undefined);
+        myGames[gameID] = message; 
         myGames[gameID].hostSocketID = socket.id;
         myGames[gameID].hasStarted = false;
         message.players = [];
