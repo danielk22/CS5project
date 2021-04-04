@@ -1,13 +1,27 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>A Generic Game Client</title>
+        <title>A Mangos Client</title>
+        <link rel="stylesheet" type="text/css" href="mangosClientStyle.css" />
     </head>
-    <body>
-        <h1> Generic Game Client</h1>
-        <h3 id = "gameStatus">Get ready to play!</h3>
-        <h3 id = "personalMessage"></h3>
-    </body>
+    <div id = "pageIntro">
+        <body>
+            <h1> Mangos Game Client</h1>
+            <h3 id = "gameStatus">Get ready to play!</h3>
+            <h3 id = "personalMessage"></h3>
+        </body>
+    </div>
+    <div id = inRound style = "display: none;">
+        Your role is: 
+        <h2 id = "role"></h2> <br>
+        The green card is:
+        <h2 id = "greenCard"></h2>
+        <ol id = "hand"></ol>
+    </div>
+    <div id = "postSelect" style = "display: none;">
+        <h1>Thank you for submitting a card! Once everyone has selected a card, the judge will choose!</h1>
+    </div>
     <script src="/socket.io/socket.io.js"></script>
     <script src="mangos_game_client.js"></script>
+    
 </html>
