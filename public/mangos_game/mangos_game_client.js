@@ -26,11 +26,11 @@ socket.on('clientDeclareJudge', function(message) { //message is judge username
     else {
         role = 'player';
     }
-    document.getElementById('role').textContent = role;
+    document.getElementById('role').textContent = `${username}'s role is: ${role}`;
 });
 
 socket.on('clientRecieveGreenCard', function(message) { //message is the green card
-    document.getElementById('greenCard').innerHTML = `${message.title} <br> ${message.descrip}`;
+    document.getElementById('greenCard').innerHTML = `The green card is: ${message.title} <br> ${message.descrip}`;
 });
 
 socket.on('clientUpdateHand', function(message) { //message is the player's hand
@@ -58,16 +58,17 @@ function displayHand(hand) {
 
 function chooseCard(cardIndex) {
     if (!isJudge) {
-        sendToHost(gameID, 'hostReceiveChosenCard', {username: username, selectedCardIndex: cardIndex});
         changeScreenTo('postSelect');
+        sendToHost(gameID, 'hostReceiveChosenCard', {username: username, selectedCardIndex: cardIndex});
     }
     else {
+        changeScreenTo('postJudging');
         sendToHost(gameID, 'hostRecieveWinningCard', cardIndex);
     }
 }
 
 function changeScreenTo(screen) {
-    const screens = ['pageIntro', 'postSelect', 'inRound'];
+    const screens = ['pageIntro', 'postSelect', 'inRound', 'postJudging'];
     for (var i = 0; i < screens.length; i++) {
         document.getElementById(screens[i]).style.display = (screens[i] === screen ? 'block' : 'none');
     }

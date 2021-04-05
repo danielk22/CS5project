@@ -13,16 +13,11 @@
         <h3 id = "startMessage"></h3>
         <ol id = "welcomeList"></ol>
       </div>
-      <table id = "players">
-        <tr>
-          <th>Name</th> <th>Score</th>
-        </tr>
-      </table>
+      <table id = "players"></table>
       <iframe id = "redCards" style = "display: none;" src = "XVR27's Apples To Apples Page - Alphabetical List - Red Apples (With Flavor Text).html" width = "500" height = "500" onload = "storeRed();"></iframe>
       <iframe id = "greenCards" style = "display: none;" src = "XVR27's Apples To Apples Page - Alphabetical List - Green Apples (With Synonyms).html" width = "500" height = "500" onload = "storeGreen();"></iframe>
       <div id = "inRound" style = "display: none;">
-        <h3 id = "judgeDisplay"></h3>
-        The green card is: 
+        <h3 id = "judgeDisplay"></h3> 
         <h2 id = "greenCardDisplay"></h2>
         <h2 id = "selectedCardNum"></h2> cards have been submitted!
       </div>
@@ -31,6 +26,10 @@
       </div>
       <div id = "endRound" style = "display: none;">
         <h1 id = "winner"></h1>
+      </div>
+      <div id = "endGame" style = "display: none;">
+        <h1 id = "displayWinner"></h1>
+        <button type = "button" onclick = "startGame()">Play Again!</button>
       </div>
   </body>
   

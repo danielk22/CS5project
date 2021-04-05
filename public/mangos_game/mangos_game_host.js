@@ -8,7 +8,7 @@ var currentGreen = 0;
 var judgeIndex;
 const cardsPerHand = 7;
 var selectedCards = [];
-
+const pointsToWin = 5;
 
 
 const gameDescriptor = {
@@ -97,11 +97,14 @@ socket.on('hostGameStart', function () {
     document.getElementById('startMessage').textContent = 'The game has started!';
     shuffleCards(redCards);
     shuffleCards(greenCards);
+    currentRed = 0;
+    currentGreen = 0;
     for (var i = 0; i < players.length; i++) {
         players[i].score = 0; //set every player's score to 0 at the start of the game, set their hand to empty.
         players[i].hand = [];
         players[i].selectedCardIndex = -1; //set every player to not have selected a card
     }
+    updateScore();
     judgeIndex = Math.floor(Math.random() * players.length);
     doNextRound();
 });
@@ -110,7 +113,7 @@ function doNextRound() {
     changeScreenTo('inRound')
     document.getElementById('selectedCardNum').textContent = '0';
     document.getElementById('judgeDisplay').textContent = `This round's judge is: ${players[judgeIndex].username}`;
-    document.getElementById('greenCardDisplay').innerHTML = `${greenCards[currentGreen].title} <br> ${greenCards[currentGreen].descrip}`;
+    document.getElementById('greenCardDisplay').innerHTML = `The green card is: ${greenCards[currentGreen].title} <br> ${greenCards[currentGreen].descrip}`;
     sendToAllPlayers(gameID, 'clientDeclareJudge', players[judgeIndex].username);
     sendToAllPlayers(gameID, 'clientRecieveGreenCard', greenCards[currentGreen]);
     for (var i = 0; i < players.length; i++) { //Fill each hand 
@@ -124,6 +127,8 @@ socket.on('hostReceiveChosenCard', function(message) { //message has a username 
     player.selectedCardIndex = message.selectedCardIndex;
     player.hand[player.selectedCardIndex].username = message.username;
     selectedCards.push(player.hand[player.selectedCardIndex]);
+    console.log(`selectedCards has increased to: ${selectedCards}`);
+    
     document.getElementById('selectedCardNum').textContent = `${selectedCards.length}`;
     if (selectedCards.length === players.length - 1) {
         changeScreenTo('inJudging');
@@ -142,12 +147,18 @@ socket.on('hostRecieveWinningCard', function(message) { //message is the winning
     document.getElementById('winner').innerHTML = `${selectedCards[selectedIndex].username} won with the card 
                                                    ${selectedCards[selectedIndex].title} <br> 
                                                    ${selectedCards[selectedIndex].descrip}`;
-    getPlayerByName(selectedCards[selectedIndex].username).score ++;
+    var winner = getPlayerByName(selectedCards[selectedIndex].username)
+    winner.score++;
     updateScore();
     judgeIndex = (judgeIndex + 1) % players.length;
     currentGreen++;
     removeUsedCards();
-    doNextRound();
+    if (winner.score == pointsToWin) {
+        endGame(winner);
+    }
+    else {
+        doNextRound();
+    }
 });
 
 function removeUsedCards() {
@@ -158,10 +169,17 @@ function removeUsedCards() {
         }
     }
     selectedCards = [];
+    console.log('selectedCards now = []');
+}
+
+function endGame(winner) {
+    console.log('got to endGame()');
+    document.getElementById('displayWinner').textContent = `${winner.username} won!`;
+    changeScreenTo('endGame');
 }
 
 function updateScore() {
-    str = '';
+    str = '<tr><th>Name</th><th>Score</th></tr>';
     for (var i = 0; i < players.length; i++) {
         var score = (players[i].score == undefined ? '0' : players[i].score);
         str += `<tr><td>${players[i].username}</td><td>${score}</td></tr>`;
@@ -185,7 +203,7 @@ function getPlayerByName(name) {
 }
 
 function changeScreenTo(screen) {
-    const screens = ['pageIntro', 'inRound', 'inJudging', 'endRound'];
+    const screens = ['pageIntro', 'inRound', 'inJudging', 'endRound', 'endGame'];
     for (var i = 0; i < screens.length; i++) {
         document.getElementById(screens[i]).style.display = (screens[i] === screen ? 'block' : 'none');
     }
