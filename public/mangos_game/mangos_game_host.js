@@ -9,6 +9,8 @@ var judgeIndex;
 const cardsPerHand = 7;
 var selectedCards = [];
 const pointsToWin = 5;
+const endRoundTime = 5;
+
 
 
 const gameDescriptor = {
@@ -111,7 +113,7 @@ socket.on('hostGameStart', function () {
 
 function doNextRound() {
     changeScreenTo('inRound')
-    document.getElementById('selectedCardNum').textContent = '0';
+    document.getElementById('selectedCardNum').textContent = '0 cards have been submitted';
     document.getElementById('judgeDisplay').textContent = `This round's judge is: ${players[judgeIndex].username}`;
     document.getElementById('greenCardDisplay').innerHTML = `The green card is: ${greenCards[currentGreen].title} <br> ${greenCards[currentGreen].descrip}`;
     sendToAllPlayers(gameID, 'clientDeclareJudge', players[judgeIndex].username);
@@ -129,9 +131,10 @@ socket.on('hostReceiveChosenCard', function(message) { //message has a username 
     selectedCards.push(player.hand[player.selectedCardIndex]);
     console.log(`selectedCards has increased to: ${selectedCards}`);
     
-    document.getElementById('selectedCardNum').textContent = `${selectedCards.length}`;
+    document.getElementById('selectedCardNum').textContent = `${selectedCards.length} cards have been submitted`;
     if (selectedCards.length === players.length - 1) {
         changeScreenTo('inJudging');
+        document.getElementById('remindGreenCard').innerHTML = `The green card is: ${greenCards[currentGreen].title} <br> ${greenCards[currentGreen].descrip}`;
         str = '';
         for (var i = 0; i < selectedCards.length; i++) {
             str += `<li> ${selectedCards[i].title} <br> ${selectedCards[i].descrip} </li>`;
@@ -141,7 +144,7 @@ socket.on('hostReceiveChosenCard', function(message) { //message has a username 
     }
 });
 
-socket.on('hostRecieveWinningCard', function(message) { //message is the winning card index
+socket.on('hostRecieveWinningCard', async function(message) { //message is the winning card index
     changeScreenTo('endRound');
     var selectedIndex = message;
     document.getElementById('winner').innerHTML = `${selectedCards[selectedIndex].username} won with the card 
@@ -150,6 +153,7 @@ socket.on('hostRecieveWinningCard', function(message) { //message is the winning
     var winner = getPlayerByName(selectedCards[selectedIndex].username)
     winner.score++;
     updateScore();
+    await sleep(endRoundTime * 1000);
     judgeIndex = (judgeIndex + 1) % players.length;
     currentGreen++;
     removeUsedCards();
@@ -201,6 +205,12 @@ function getPlayerByName(name) {
     }
     return undefined;
 }
+
+//SLEEP FUNCTION COPIED FROM stackoverflow.com/questions/951021/what-is-the-javascript-version-of-sleep
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 
 function changeScreenTo(screen) {
     const screens = ['pageIntro', 'inRound', 'inJudging', 'endRound', 'endGame'];
