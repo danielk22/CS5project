@@ -7,7 +7,7 @@ function sendName() {
     socket.emit('serverRegisterNewClient', {username: username, gameID: gameID});
 }
 
-socket.on('clientRedirect', function(message) {//message is the url
+socket.on('clientRedirect', function(message) { //message is the url
     sessionStorage.setItem("gameID", message.gameID);
     sessionStorage.setItem("username", message.username);
     window.location = message.clientURL;
