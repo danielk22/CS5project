@@ -10,9 +10,11 @@
 	<div class="jumbotron text-center">
 		<h1 class="header"> Welcome to 2Dgames! </h1> <br/>
 		<label> Name:</label> <br/>
-		<input type = "text" id = "name"/> <br/>
+		<input type = "text" id = "name" required /> <br/>
 		<label> Game ID: </label> <br/>
-		<input type = "text" id = "gameID" /> <br/> <br/>
+		<input oninput="let p=this.selectionStart;this.value=this.value.toUpperCase();
+			this.setSelectionRange(p, p);" maxlength="4" type = "text" id = "gameID" pattern="[A-Z]" required /> 
+		<br/> <br/>
 		<button type = "button" class = "btn btn-primary" onclick = "sendName()">Join!</button>
 	</div>
 	<!-- Bootstrap insert, don't edit above /body -->

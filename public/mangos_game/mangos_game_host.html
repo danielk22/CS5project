@@ -12,6 +12,7 @@
 		<h5 class="sub-header"> You are a Mangos to Mangos game host </h5>
         <p id = "gameID"></p>
         <button type = "button" class = "btn btn-success" onclick = "startGame()">Start Game!</button>
+        <p id="startError" class="error"> </p>
         <h3 id = "startMessage"></h3>
         <ol id = "welcomeList"></ol>
 		<h6> Current players in lobby: </h6>
@@ -30,6 +31,8 @@
       </div>
       <div id = "endRound" class = "jumbotron text-center" style = "display: none;">
         <h1 id = "winner"></h1>
+        <p id="winningcard_desc"></p>
+        <table class = "table usertable table-striped table-hover table-sm" id = "playerScores"></table>
       </div>
       <div id = "endGame" class = "jumbotron text-center" style = "display: none;">
         <h1 id = "displayWinner"></h1>

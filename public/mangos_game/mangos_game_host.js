@@ -32,7 +32,7 @@ socket.on('hostRegisterNewGame', function(message) {
 socket.on('hostNewPlayerList', function(message) {
     console.log('got a hostNewPlayerList event');
     players = message;
-    updateScore(); //This displays current player list and score (which is initially set to 0)
+    updateScore('players'); //This displays current player list and score (which is initially set to 0)
 });
 
 function storeRed() {
@@ -84,7 +84,15 @@ function shuffleCards(cards) {
 
 function startGame() {
     console.log('The start game button has been pressed!');
-    socket.emit('serverGameStartRequested', gameID);
+    if(players.length < gameDescriptor.minPlayers || players.length > gameDescriptor.maxPlayers) {
+        //console.log(players.length);
+        document.getElementById('startError').innerHTML = `The number of players cannot be less than
+        ${gameDescriptor.minPlayers} or greater than ${gameDescriptor.maxPlayers}.`
+    }
+    else {
+        console.log('Game has been started!');
+        socket.emit('serverGameStartRequested', gameID);
+    }
 }
 
 function sendToAllPlayers(gameID, event, message) {
@@ -106,7 +114,7 @@ socket.on('hostGameStart', function () {
         players[i].hand = [];
         players[i].selectedCardIndex = -1; //set every player to not have selected a card
     }
-    updateScore();
+    updateScore('players');
     judgeIndex = Math.floor(Math.random() * players.length);
     doNextRound();
 });
@@ -147,12 +155,13 @@ socket.on('hostReceiveChosenCard', function(message) { //message has a username 
 socket.on('hostRecieveWinningCard', async function(message) { //message is the winning card index
     changeScreenTo('endRound');
     var selectedIndex = message;
-    document.getElementById('winner').innerHTML = `${selectedCards[selectedIndex].username} won with the card 
-                                                   ${selectedCards[selectedIndex].title} <br> 
-                                                   ${selectedCards[selectedIndex].descrip}`;
+    document.getElementById('winner').innerHTML = `${selectedCards[selectedIndex].username} 
+        won with the card ${selectedCards[selectedIndex].title} <br>`;
+    document.getElementById('winningcard_desc').innerHTML = `Description: 
+        ${selectedCards[selectedIndex].descrip}`;
     var winner = getPlayerByName(selectedCards[selectedIndex].username)
     winner.score++;
-    updateScore();
+    updateScore('playerScores');
     await sleep(endRoundTime * 1000);
     judgeIndex = (judgeIndex + 1) % players.length;
     currentGreen++;
@@ -182,13 +191,28 @@ function endGame(winner) {
     changeScreenTo('endGame');
 }
 
-function updateScore() {
-    str = '<tr><th>Name</th><th>Score</th></tr>';
-    for (var i = 0; i < players.length; i++) {
-        var score = (players[i].score == undefined ? '0' : players[i].score);
-        str += `<tr><td>${players[i].username}</td><td>${score}</td></tr>`;
+function updateScore(tableName) {
+    isThereScores = true;
+    for(var i = 0; i < players.length; i++) {
+        if(players[i].score !== undefined) {
+            isThereScores = false;
+            break;
+        }
     }
-    document.getElementById('players').innerHTML = str;
+    if(isThereScores) {
+        str = '<tr><th>Username</th></tr>'
+        for(var i = 0; i < players.length; i++) {
+            str += `<tr><td>${players[i].username}</td></tr>`;
+        }
+    }
+    else {
+        str = '<tr><th>Username</th><th>Score</th></tr>';
+        for (var i = 0; i < players.length; i++) {
+            var score = (players[i].score == undefined) ? '0' : players[i].score;
+            str += `<tr><td>${players[i].username}</td><td>${score}</td></tr>`;
+        }
+    }
+    document.getElementById(tableName).innerHTML = str;
 }
 
 function fillHand(hand) {
