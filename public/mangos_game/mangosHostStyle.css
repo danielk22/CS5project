@@ -1,11 +1,11 @@
 #greenCardDisplay
 {
-    color: green
+    color: black
 }
 
 #chosenCards, #winner
 {
-    color: red
+    color: black /* contrasts with green or red card background */
 }
 
 body

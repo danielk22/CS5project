@@ -1,11 +1,11 @@
 #greenCard, #remindGreenCard
 {
-    color: green
+    color: black
 }
 
 #hand
 {
-    color: red
+    color: black /* contrasts against green or red card background */
 }
 
 body
@@ -21,13 +21,13 @@ body
 .header
 {
 	text-align: center;
-	font-family: Courier;
+	font-family: Helvetica;
 }
 
 .sub-header
 {
 	text-align: center;
-	font-family: Courier;
+	font-family: Helvetica;
 }
 
 .button

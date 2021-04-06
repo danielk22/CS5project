@@ -145,7 +145,9 @@ socket.on('hostReceiveChosenCard', function(message) { //message has a username 
         document.getElementById('remindGreenCard').innerHTML = `The green card is: ${greenCards[currentGreen].title} <br> ${greenCards[currentGreen].descrip}`;
         str = '';
         for (var i = 0; i < selectedCards.length; i++) {
-            str += `<li> ${selectedCards[i].title} <br> ${selectedCards[i].descrip} </li>`;
+            str += `<div class="card bg-danger"><div class="card-body text-center" onClick = 
+                    "chooseCard(${i})"> <p class="card-text"> ${selectedCards[i].title} <br> 
+                    ${selectedCards[i].descrip} </p></div></div>`;
         }
         document.getElementById('chosenCards').innerHTML = str;
         sendToPlayer(gameID, players[judgeIndex].username, 'clientCardsToJudge', selectedCards);
@@ -156,7 +158,7 @@ socket.on('hostRecieveWinningCard', async function(message) { //message is the w
     changeScreenTo('endRound');
     var selectedIndex = message;
     document.getElementById('winner').innerHTML = `${selectedCards[selectedIndex].username} 
-        won with the card ${selectedCards[selectedIndex].title} <br>`;
+        won with the card \"${selectedCards[selectedIndex].title}\" <br>`;
     document.getElementById('winningcard_desc').innerHTML = `Description: 
         ${selectedCards[selectedIndex].descrip}`;
     var winner = getPlayerByName(selectedCards[selectedIndex].username)
