@@ -142,7 +142,7 @@ socket.on('hostReceiveChosenCard', function(message) { //message has a username 
     document.getElementById('selectedCardNum').textContent = `${selectedCards.length} cards have been submitted`;
     if (selectedCards.length === players.length - 1) {
         changeScreenTo('inJudging');
-        document.getElementById('remindGreenCard').innerHTML = `The green card is: ${greenCards[currentGreen].title} <br> ${greenCards[currentGreen].descrip}`;
+        document.getElementById('remindGreenCard').innerHTML = `The green card is: \"${greenCards[currentGreen].title}\" <br> ${greenCards[currentGreen].descrip}`;
         str = '';
         for (var i = 0; i < selectedCards.length; i++) {
             str += `<div class="card bg-danger"><div class="card-body text-center" onClick = 

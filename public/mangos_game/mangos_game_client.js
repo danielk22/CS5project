@@ -49,7 +49,7 @@ socket.on('clientCardsToJudge', function(message) { //message is an array of car
 
 
 function displayHand(hand) {
-    str = document.getElementById('hand').innerHTML;
+    str = '';
     for (var i = 0; i < hand.length; i++) {
         str += `<div class="card bg-danger"><div class="card-body text-center" onClick = 
         "chooseCard(${i})"> <p class="card-text"> ${hand[i].title} <br> ${hand[i].descrip} </p></div></div>`; 
