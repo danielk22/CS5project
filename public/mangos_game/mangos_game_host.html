@@ -17,13 +17,19 @@
         <ol id = "welcomeList"></ol>
 		<h6> Current players in lobby: </h6>
 		<table class = "table usertable table-striped table-hover table-sm" id = "players"></table>
+    <button href="#rules" class="btn btn-info" data-toggle="collapse"> View Rules </button>
+    <div id="rules" class="collapse">
+      <!-- TODO: write rules -->
+      <p> lorem ipsum dolor </p>
+    </div>
       </div>
       <iframe id = "redCards" style = "display: none;" src = "XVR27's Apples To Apples Page - Alphabetical List - Red Apples (With Flavor Text).html" width = "500" height = "500" onload = "storeRed();"></iframe>
       <iframe id = "greenCards" style = "display: none;" src = "XVR27's Apples To Apples Page - Alphabetical List - Green Apples (With Synonyms).html" width = "500" height = "500" onload = "storeGreen();"></iframe>
       <div id = "inRound" class = "jumbotron text-center" style = "display: none;">
         <h3 id = "judgeDisplay"></h3> 
-        <h2 id = "greenCardDisplay"></h2>
-        <h2 id = "selectedCardNum"></h2>
+        <div class="card bg-success"> <div class="card-body text-center" id="greenCard"> </div> </div>
+        <br />
+        <p id = "selectedCardNum"></p>
       </div>
       <div id = "inJudging" class = "jumbotron text-center" style = "display: none;">
         <div class="card bg-success">

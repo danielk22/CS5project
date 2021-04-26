@@ -122,8 +122,10 @@ socket.on('hostGameStart', function () {
 function doNextRound() {
     changeScreenTo('inRound')
     document.getElementById('selectedCardNum').textContent = '0 cards have been submitted';
-    document.getElementById('judgeDisplay').textContent = `This round's judge is: ${players[judgeIndex].username}`;
-    document.getElementById('greenCardDisplay').innerHTML = `The green card is: ${greenCards[currentGreen].title} <br> ${greenCards[currentGreen].descrip}`;
+    document.getElementById('judgeDisplay').textContent = `This round's judge is: 
+            ${players[judgeIndex].username}`;
+    document.getElementById('greenCard').innerHTML = `<h4 class="card-title"> ${message.title} </h4> 
+            <p class="card-text"> ${message.descrip} </p>`;
     sendToAllPlayers(gameID, 'clientDeclareJudge', players[judgeIndex].username);
     sendToAllPlayers(gameID, 'clientRecieveGreenCard', greenCards[currentGreen]);
     for (var i = 0; i < players.length; i++) { //Fill each hand 

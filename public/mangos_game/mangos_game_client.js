@@ -30,8 +30,8 @@ socket.on('clientDeclareJudge', function(message) { //message is judge username
 });
 
 socket.on('clientRecieveGreenCard', function(message) { //message is the green card
-    document.getElementById('greenCard').innerHTML = `The green card is: 
-            ${message.title} <br> ${message.descrip}`;
+    document.getElementById('greenCard').innerHTML = `<h4 class="card-title"> ${message.title} </h4> 
+            <p class="card-text"> ${message.descrip} </p>`;
 });
 
 socket.on('clientUpdateHand', function(message) { //message is the player's hand
@@ -52,7 +52,8 @@ function displayHand(hand) {
     str = '';
     for (var i = 0; i < hand.length; i++) {
         str += `<div class="card bg-danger"><div class="card-body text-center" onClick = 
-        "chooseCard(${i})"> <p class="card-text"> ${hand[i].title} <br> ${hand[i].descrip} </p></div></div>`; 
+                "chooseCard(${i})"> <h4 class="card-title"> ${hand[i].title} </h4>
+                <p class="card-text"> ${hand[i].descrip} </p></div></div>`; 
     }
     document.getElementById('hand').innerHTML = str;
 }
