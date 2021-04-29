@@ -1,16 +1,14 @@
-var socket = io();
-var gameID = sessionStorage.getItem('gameID');
-var username = sessionStorage.getItem('username');
-var isJudge;
+var socket = io(); //The socket connection to the server
+var gameID = sessionStorage.getItem('gameID'); //The gameID
+var username = sessionStorage.getItem('username'); //The client's username
+var isJudge; //Whether or not the player is the judge or not in a given round
 
+//Send an event to the server that the client has been redirected.
 socket.emit('serverClientRedirected', {gameID: gameID, username: username});
+//Change the screen to the intro screen.
 changeScreenTo('pageIntro');
 
-function sendToHost(gameID, event, message) {
-    socket.emit('serverSendToHost', {gameID: gameID, event: event, hostMessage: message})
-}
-
-
+//FOR 
 socket.on('clientPersonalMessage', function(message) { // message is string to display
     document.getElementById('personalMessage').textContent = message;
 });
@@ -46,6 +44,10 @@ socket.on('clientCardsToJudge', function(message) { //message is an array of car
     displayHand(cards);
 });
 
+//Send an event to the host along with a message and the gameID
+function sendToHost(gameID, event, message) {
+    socket.emit('serverSendToHost', {gameID: gameID, event: event, hostMessage: message})
+}
 
 function displayHand(hand) {
     str = '';
