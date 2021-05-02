@@ -208,14 +208,7 @@ function endGame(winner) {
     changeScreenTo('endGame');
 }
 
-<<<<<<< HEAD
-//Updates the score on the host's screen
-function updateScore() {
-    str = '<tr><th>Name</th><th>Score</th></tr>';
-    for (var i = 0; i < players.length; i++) {
-        var score = (players[i].score == undefined ? '0' : players[i].score);
-        str += `<tr><td>${players[i].username}</td><td>${score}</td></tr>`;
-=======
+
 function updateScore(tableName) {
     isThereScores = true;
     for(var i = 0; i < players.length; i++) {
@@ -236,7 +229,6 @@ function updateScore(tableName) {
             var score = (players[i].score == undefined) ? '0' : players[i].score;
             str += `<tr><td>${players[i].username}</td><td>${score}</td></tr>`;
         }
->>>>>>> a14db33ab87a93d767e948477d0d438de34cbf2d
     }
     document.getElementById(tableName).innerHTML = str;
 }
