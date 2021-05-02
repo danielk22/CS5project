@@ -33,10 +33,10 @@ socket.on('hostRegisterNewGame', function(message) { //message is the gameID
 socket.on('hostNewPlayerList', function(message) { //message is the list of players
     console.log('got a hostNewPlayerList event');
     players = message;
-    updateScore(); //This displays current player list and score (which is initially set to 0)
+    updateScore('players'); //This displays current player list and score (which is initially set to 0)
 });
 
-//When the server tells the host to start the game, start the game!!!
+//The function plays a round of mangos to mangos. 
 socket.on('hostGameStart', function () {
     document.getElementById('startMessage').textContent = 'The game has started!';
     shuffleCards(redCards);
@@ -48,12 +48,12 @@ socket.on('hostGameStart', function () {
         players[i].hand = [];
         players[i].selectedCardIndex = -1; //set every player to not have selected a card
     }
-    updateScore();
+    updateScore('players');
     judgeIndex = Math.floor(Math.random() * players.length);
     doNextRound();
 });
 
-//When the host recieves a card that was chosen by a player, add it to an array that will be sent to the judge
+//Remove all the used cards from the players' hands as well as set the players to not have selected a card.
 socket.on('hostReceiveChosenCard', function(message) { //message has a username and selectedCardIndex
     var player = getPlayerByName(message.username);
     player.selectedCardIndex = message.selectedCardIndex;
@@ -64,26 +64,28 @@ socket.on('hostReceiveChosenCard', function(message) { //message has a username 
     document.getElementById('selectedCardNum').textContent = `${selectedCards.length} cards have been submitted`;
     if (selectedCards.length === players.length - 1) {
         changeScreenTo('inJudging');
-        document.getElementById('remindGreenCard').innerHTML = `The green card is: ${greenCards[currentGreen].title} <br> ${greenCards[currentGreen].descrip}`;
+        document.getElementById('remindGreenCard').innerHTML = `The green card is: \"${greenCards[currentGreen].title}\" <br> ${greenCards[currentGreen].descrip}`;
         str = '';
         for (var i = 0; i < selectedCards.length; i++) {
-            str += `<li> ${selectedCards[i].title} <br> ${selectedCards[i].descrip} </li>`;
+            str += `<div class="card bg-danger"><div class="card-body text-center" onClick = 
+                    "chooseCard(${i})"> <p class="card-text"> ${selectedCards[i].title} <br> 
+                    ${selectedCards[i].descrip} </p></div></div>`;
         }
         document.getElementById('chosenCards').innerHTML = str;
         sendToPlayer(gameID, players[judgeIndex].username, 'clientCardsToJudge', selectedCards);
     }
 });
 
-//When the host recieves the winning card from the judge, display who won the round and update the scores as well as players hands. Once all the clean up is done, start a new round or end the game.
 socket.on('hostRecieveWinningCard', async function(message) { //message is the winning card index
     changeScreenTo('endRound');
     var selectedIndex = message;
-    document.getElementById('winner').innerHTML = `${selectedCards[selectedIndex].username} won with the card 
-                                                   ${selectedCards[selectedIndex].title} <br> 
-                                                   ${selectedCards[selectedIndex].descrip}`;
+    document.getElementById('winner').innerHTML = `${selectedCards[selectedIndex].username} 
+        won with the card \"${selectedCards[selectedIndex].title}\" <br>`;
+    document.getElementById('winningcard_desc').innerHTML = `Description: 
+        ${selectedCards[selectedIndex].descrip}`;
     var winner = getPlayerByName(selectedCards[selectedIndex].username)
     winner.score++;
-    updateScore();
+    updateScore('playerScores');
     await sleep(endRoundTime * 1000);
     judgeIndex = (judgeIndex + 1) % players.length;
     currentGreen++;
@@ -149,7 +151,15 @@ function shuffleCards(cards) {
 //Start the game function! Is called when the start game button is pressed
 function startGame() {
     console.log('The start game button has been pressed!');
-    socket.emit('serverGameStartRequested', gameID);
+    if(players.length < gameDescriptor.minPlayers || players.length > gameDescriptor.maxPlayers) {
+        //console.log(players.length);
+        document.getElementById('startError').innerHTML = `The number of players cannot be less than
+        ${gameDescriptor.minPlayers} or greater than ${gameDescriptor.maxPlayers}.`
+    }
+    else {
+        console.log('Game has been started!');
+        socket.emit('serverGameStartRequested', gameID);
+    }
 }
 
 //A function that sends data to all players when given the gameID, event that is being emitted, and the data you want to send
@@ -162,12 +172,15 @@ function sendToPlayer(gameID, username, event, message) {
     socket.emit('serverSendToPlayer', {gameID: gameID, username: username, event: event, clientMessage: message});
 }
 
-//The function plays a round of mangos to mangos. 
+
+
 function doNextRound() {
     changeScreenTo('inRound')
     document.getElementById('selectedCardNum').textContent = '0 cards have been submitted';
-    document.getElementById('judgeDisplay').textContent = `This round's judge is: ${players[judgeIndex].username}`;
-    document.getElementById('greenCardDisplay').innerHTML = `The green card is: ${greenCards[currentGreen].title} <br> ${greenCards[currentGreen].descrip}`;
+    document.getElementById('judgeDisplay').textContent = `This round's judge is: 
+            ${players[judgeIndex].username}`;
+    document.getElementById('greenCard').innerHTML = `<h4 class="card-title"> ${message.title} </h4> 
+            <p class="card-text"> ${message.descrip} </p>`;
     sendToAllPlayers(gameID, 'clientDeclareJudge', players[judgeIndex].username);
     sendToAllPlayers(gameID, 'clientRecieveGreenCard', greenCards[currentGreen]);
     for (var i = 0; i < players.length; i++) { //Fill each hand 
@@ -176,7 +189,7 @@ function doNextRound() {
     }
 }
 
-//Remove all the used cards from the players' hands as well as set the players to not have selected a card.
+
 function removeUsedCards() {
     for (var i = 0; i < players.length; i++) {
         if (players[i].selectedCardIndex != -1) {
@@ -195,14 +208,37 @@ function endGame(winner) {
     changeScreenTo('endGame');
 }
 
+<<<<<<< HEAD
 //Updates the score on the host's screen
 function updateScore() {
     str = '<tr><th>Name</th><th>Score</th></tr>';
     for (var i = 0; i < players.length; i++) {
         var score = (players[i].score == undefined ? '0' : players[i].score);
         str += `<tr><td>${players[i].username}</td><td>${score}</td></tr>`;
+=======
+function updateScore(tableName) {
+    isThereScores = true;
+    for(var i = 0; i < players.length; i++) {
+        if(players[i].score !== undefined) {
+            isThereScores = false;
+            break;
+        }
     }
-    document.getElementById('players').innerHTML = str;
+    if(isThereScores) {
+        str = '<tr><th>Username</th></tr>'
+        for(var i = 0; i < players.length; i++) {
+            str += `<tr><td>${players[i].username}</td></tr>`;
+        }
+    }
+    else {
+        str = '<tr><th>Username</th><th>Score</th></tr>';
+        for (var i = 0; i < players.length; i++) {
+            var score = (players[i].score == undefined) ? '0' : players[i].score;
+            str += `<tr><td>${players[i].username}</td><td>${score}</td></tr>`;
+        }
+>>>>>>> a14db33ab87a93d767e948477d0d438de34cbf2d
+    }
+    document.getElementById(tableName).innerHTML = str;
 }
 
 //Fills a hand until the hand.length is equal to cardsPerHand

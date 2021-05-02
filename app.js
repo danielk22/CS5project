@@ -26,7 +26,7 @@ io.on('connection', function(socket) {
             gameID = generateGameID(IDlength);
             console.log(`GameID = ${gameID} and myGames[gameID] = ${myGames[gameID]}`);
         } while (myGames[gameID] !== undefined);
-        myGames[gameID] = message; 
+		myGames[gameID] = message; 
         myGames[gameID].hostSocketID = socket.id;
         myGames[gameID].hasStarted = false;
         message.players = [];

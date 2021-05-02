@@ -1,9 +1,56 @@
 #greenCardDisplay
 {
-    color: green
+    color: black
 }
 
 #chosenCards, #winner
 {
-    color: red
+    color: black /* contrasts with green or red card background */
+}
+
+body
+{
+	width: 1200px;
+	margin: auto;
+	padding: 10px;
+	font-family: Verdana;
+	background-color: #ffff66;
+	font-size: 14px;
+}
+
+.header
+{
+	text-align: center;
+	font-family: Courier;
+}
+
+.sub-header
+{
+	text-align: center;
+	font-family: Courier;
+}
+
+.button
+{
+	font-family: Helvetica;
+}
+
+.center
+{
+	margin: auto;
+	padding: 15px;
+	padding-top: 5px;
+	width: 20%;
+	border: 3px solid blue;
+}
+
+.error
+{
+	color: red;
+}
+
+.usertable
+{
+	width: 30%;
+	font-size: 14px;
 }

@@ -2,36 +2,56 @@
 <html lang="en">
   <head>
     <title>2Dgames</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" 
+	integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="mangosHostStyle.css" />
   </head>
-  <div id = "pageIntro">
-    <h1> Welcome to 2Dgames </h1>
-    <h3> You are a Mangos to Mangos game host </h3>
     <body>
-        <h3 id = "gameID"></h3>
-        <button type = "button" onclick = "startGame()">Start Game!</button>
+	  <div id = "pageIntro" class = "jumbotron text-center">
+		<h1 class="header"> Welcome to 2Dgames </h1>
+		<h5 class="sub-header"> You are a Mangos to Mangos game host </h5>
+        <p id = "gameID"></p>
+        <button type = "button" class = "btn btn-success" onclick = "startGame()">Start Game!</button>
+        <p id="startError" class="error"> </p>
         <h3 id = "startMessage"></h3>
         <ol id = "welcomeList"></ol>
+		<h6> Current players in lobby: </h6>
+		<table class = "table usertable table-striped table-hover table-sm" id = "players"></table>
+    <button href="#rules" class="btn btn-info" data-toggle="collapse"> View Rules </button>
+    <div id="rules" class="collapse">
+      <!-- TODO: write rules -->
+      <p> lorem ipsum dolor </p>
+    </div>
       </div>
-      <table id = "players"></table>
       <iframe id = "redCards" style = "display: none;" src = "XVR27's Apples To Apples Page - Alphabetical List - Red Apples (With Flavor Text).html" width = "500" height = "500" onload = "storeRed();"></iframe>
       <iframe id = "greenCards" style = "display: none;" src = "XVR27's Apples To Apples Page - Alphabetical List - Green Apples (With Synonyms).html" width = "500" height = "500" onload = "storeGreen();"></iframe>
-      <div id = "inRound" style = "display: none;">
+      <div id = "inRound" class = "jumbotron text-center" style = "display: none;">
         <h3 id = "judgeDisplay"></h3> 
-        <h2 id = "greenCardDisplay"></h2>
-        <h2 id = "selectedCardNum"></h2>
+        <div class="card bg-success"> <div class="card-body text-center" id="greenCard"> </div> </div>
+        <br />
+        <p id = "selectedCardNum"></p>
       </div>
-      <div id = "inJudging" style = "display: none;">
-        <h2 id = "remindGreenCard"></h2>
-        <ol id = "chosenCards"></ol>
+      <div id = "inJudging" class = "jumbotron text-center" style = "display: none;">
+        <div class="card bg-success">
+            <div class="card-body text-center"> <p class="card-text" id="remindGreenCard"></p> </div>
+        </div>
+        <div class="card-columns" id="chosenCards"> 
+        </div>
       </div>
-      <div id = "endRound" style = "display: none;">
+      <div id = "endRound" class = "jumbotron text-center" style = "display: none;">
         <h1 id = "winner"></h1>
+        <p id="winningcard_desc"></p>
+        <table class = "table usertable table-striped table-hover table-sm" id = "playerScores"></table>
       </div>
-      <div id = "endGame" style = "display: none;">
+      <div id = "endGame" class = "jumbotron text-center" style = "display: none;">
         <h1 id = "displayWinner"></h1>
         <button type = "button" onclick = "startGame()">Play Again!</button>
       </div>
+	  <!-- Bootstrap insert, don't edit above /body -->
+	  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" 
+		crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" 
+		integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
   </body>
   
   <script src="/socket.io/socket.io.js"></script>

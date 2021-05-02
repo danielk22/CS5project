@@ -1,4 +1,38 @@
-body 
+body
 {
-    font-size: 32px
+	margin: auto;
+	padding: 10px;
+	font-family: Verdana;
+	background-color: #ffff66;
+}
+
+.header
+{
+	text-align: center;
+	font-family: Calibri;
+}
+
+.sub-header
+{
+	text-align: center;
+	font-family: Courier;
+}
+
+.button
+{
+	font-family: Helvetica;
+}
+
+.center
+{
+	margin: auto;
+	padding: 15px;
+	padding-top: 5px;
+	width: 20%;
+	border: 3px solid blue;
+}
+
+.error
+{
+	color: red;
 }

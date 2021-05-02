@@ -1,14 +1,50 @@
 #greenCard, #remindGreenCard
 {
-    color: green
+    color: black
 }
 
 #hand
 {
-    color: red
+    color: black /* contrasts against green or red card background */
 }
 
-body 
+body
 {
-    font-size: 32px
+	width: 1200px;
+	margin: auto;
+	padding: 10px;
+	font-family: Verdana;
+	background-color: #ffff66;
+	font-size: 14px;
+}
+
+.header
+{
+	text-align: center;
+	font-family: Helvetica;
+}
+
+.sub-header
+{
+	text-align: center;
+	font-family: Helvetica;
+}
+
+.button
+{
+	font-family: Helvetica;
+}
+
+.center
+{
+	margin: auto;
+	padding: 15px;
+	padding-top: 5px;
+	width: 20%;
+	border: 3px solid blue;
+}
+
+.error
+{
+	color: red;
 }
