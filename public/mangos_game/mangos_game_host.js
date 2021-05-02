@@ -50,6 +50,7 @@ socket.on('hostGameStart', function () {
     }
     updateScore('players');
     judgeIndex = Math.floor(Math.random() * players.length);
+    console.log('starting the first round');
     doNextRound();
 });
 
@@ -179,8 +180,8 @@ function doNextRound() {
     document.getElementById('selectedCardNum').textContent = '0 cards have been submitted';
     document.getElementById('judgeDisplay').textContent = `This round's judge is: 
             ${players[judgeIndex].username}`;
-    document.getElementById('greenCard').innerHTML = `<h4 class="card-title"> ${message.title} </h4> 
-            <p class="card-text"> ${message.descrip} </p>`;
+    document.getElementById('greenCard').innerHTML = `<h4 class="card-title"> ${greenCards[currentGreen].title} </h4> 
+            <p class="card-text"> ${greenCards[currentGreen].descrip} </p>`;
     sendToAllPlayers(gameID, 'clientDeclareJudge', players[judgeIndex].username);
     sendToAllPlayers(gameID, 'clientRecieveGreenCard', greenCards[currentGreen]);
     for (var i = 0; i < players.length; i++) { //Fill each hand 

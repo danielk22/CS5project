@@ -14,6 +14,7 @@ socket.on('clientPersonalMessage', function(message) { // message is string to d
 });
 
 socket.on('clientDeclareJudge', function(message) { //message is judge username
+    console.log('got to the clientDeclareJudge handler');
     changeScreenTo('inRound');
     isJudge = (message == username);
     var role;
