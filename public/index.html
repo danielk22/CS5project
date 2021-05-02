@@ -10,7 +10,7 @@
 	<div class="jumbotron text-center">
 		<h1 class="header"> Welcome to 2Dgames! </h1> <br/>
 		<label> Name:</label> <br/>
-		<input type = "text" id = "name" required /> <br/>
+		<input type = "text" id = "name" maxlength = "15" required /> <br/>
 		<label> Game ID: </label> <br/>
 		<input oninput="let p=this.selectionStart;this.value=this.value.toUpperCase();
 			this.setSelectionRange(p, p);" maxlength="4" type = "text" id = "gameID" pattern="[A-Z]" required /> 

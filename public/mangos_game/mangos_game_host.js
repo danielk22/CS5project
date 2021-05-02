@@ -10,8 +10,9 @@ const cardsPerHand = 7; //The number of cards in a hand
 var selectedCards = []; //The array of cards that people have chosen which starts out being empty
 const pointsToWin = 5; //The number of points it takes to win the game
 const endRoundTime = 5; //The number of seconds after each round that there is a pause
-
-
+var turnPhase; //The current turn phase should be one of the following constants
+const tpExpectingPlayerCards = 1;//The phase when the players should choose their best card
+const tpExpectingJudgeCard = 2; //The phase when the judge should choose the winning card
 //The server-required "gameDescriptor" which consistes of the min and max player count of a game, and the url a client should direct to
 const gameDescriptor = {
     minPlayers: 2,
@@ -55,47 +56,52 @@ socket.on('hostGameStart', function () {
 });
 
 //Remove all the used cards from the players' hands as well as set the players to not have selected a card.
-socket.on('hostReceiveChosenCard', function(message) { //message has a username and selectedCardIndex
-    var player = getPlayerByName(message.username);
-    player.selectedCardIndex = message.selectedCardIndex;
-    player.hand[player.selectedCardIndex].username = message.username;
-    selectedCards.push(player.hand[player.selectedCardIndex]);
-    console.log(`selectedCards has increased to: ${selectedCards}`);
-    
-    document.getElementById('selectedCardNum').textContent = `${selectedCards.length} cards have been submitted`;
-    if (selectedCards.length === players.length - 1) {
-        changeScreenTo('inJudging');
-        document.getElementById('remindGreenCard').innerHTML = `The green card is: \"${greenCards[currentGreen].title}\" <br> ${greenCards[currentGreen].descrip}`;
-        str = '';
-        for (var i = 0; i < selectedCards.length; i++) {
-            str += `<div class="card bg-danger"><div class="card-body text-center" onClick = 
-                    "chooseCard(${i})"> <p class="card-text"> ${selectedCards[i].title} <br> 
-                    ${selectedCards[i].descrip} </p></div></div>`;
+socket.on('hostReceiveChosenCard', function(message) { //message has a username and selectedCardIndex and round
+    if (message.round == currentGreen && turnPhase == tpExpectingPlayerCards) {  
+        var player = getPlayerByName(message.username);
+        player.selectedCardIndex = message.selectedCardIndex;
+        player.hand[player.selectedCardIndex].username = message.username;
+        selectedCards.push(player.hand[player.selectedCardIndex]);
+        console.log(`selectedCards has increased to: ${selectedCards}`);
+        
+        document.getElementById('selectedCardNum').textContent = `${selectedCards.length} cards have been submitted`;
+        if (selectedCards.length === players.length - 1) {
+            changeScreenTo('inJudging');
+            turnPhase = tpExpectingJudgeCard;
+            document.getElementById('remindGreenCard').innerHTML = `The green card is: \"${greenCards[currentGreen].title}\" <br> ${greenCards[currentGreen].descrip}`;
+            str = '';
+            for (var i = 0; i < selectedCards.length; i++) {
+                str += `<div class="card bg-danger"><div class="card-body text-center" onClick = 
+                        "chooseCard(${i})"> <p class="card-text"> ${selectedCards[i].title} <br> 
+                        ${selectedCards[i].descrip} </p></div></div>`;
+            }
+            document.getElementById('chosenCards').innerHTML = str;
+            sendToPlayer(gameID, players[judgeIndex].username, 'clientCardsToJudge', selectedCards);
         }
-        document.getElementById('chosenCards').innerHTML = str;
-        sendToPlayer(gameID, players[judgeIndex].username, 'clientCardsToJudge', selectedCards);
     }
 });
 
-socket.on('hostRecieveWinningCard', async function(message) { //message is the winning card index
-    changeScreenTo('endRound');
-    var selectedIndex = message;
-    document.getElementById('winner').innerHTML = `${selectedCards[selectedIndex].username} 
-        won with the card \"${selectedCards[selectedIndex].title}\" <br>`;
-    document.getElementById('winningcard_desc').innerHTML = `Description: 
-        ${selectedCards[selectedIndex].descrip}`;
-    var winner = getPlayerByName(selectedCards[selectedIndex].username)
-    winner.score++;
-    updateScore('playerScores');
-    await sleep(endRoundTime * 1000);
-    judgeIndex = (judgeIndex + 1) % players.length;
-    currentGreen++;
-    removeUsedCards();
-    if (winner.score == pointsToWin) {
-        endGame(winner);
-    }
-    else {
-        doNextRound();
+socket.on('hostRecieveWinningCard', async function(message) { //message is {cardIndex: cardIndex, round: round}
+    if (message.round == currentGreen && turnPhase == tpExpectingJudgeCard) {
+        changeScreenTo('endRound');
+        var selectedIndex = message.cardIndex;
+        document.getElementById('winner').innerHTML = `${selectedCards[selectedIndex].username} 
+            won with the card \"${selectedCards[selectedIndex].title}\" <br>`;
+        document.getElementById('winningcard_desc').innerHTML = `Description: 
+            ${selectedCards[selectedIndex].descrip}`;
+        var winner = getPlayerByName(selectedCards[selectedIndex].username)
+        winner.score++;
+        updateScore('playerScores');
+        await sleep(endRoundTime * 1000);
+        judgeIndex = (judgeIndex + 1) % players.length;
+        currentGreen++;
+        removeUsedCards();
+        if (winner.score == pointsToWin) {
+            endGame(winner);
+        }
+        else {
+            doNextRound();
+        }
     }
 });
 
@@ -174,7 +180,7 @@ function sendToPlayer(gameID, username, event, message) {
 }
 
 
-
+//This function completes a single round of mangos to mangos
 function doNextRound() {
     changeScreenTo('inRound')
     document.getElementById('selectedCardNum').textContent = '0 cards have been submitted';
@@ -182,12 +188,13 @@ function doNextRound() {
             ${players[judgeIndex].username}`;
     document.getElementById('greenCard').innerHTML = `<h4 class="card-title"> ${greenCards[currentGreen].title} </h4> 
             <p class="card-text"> ${greenCards[currentGreen].descrip} </p>`;
-    sendToAllPlayers(gameID, 'clientDeclareJudge', players[judgeIndex].username);
+    sendToAllPlayers(gameID, 'clientDeclareJudge', {judge: players[judgeIndex].username, round: currentGreen});
     sendToAllPlayers(gameID, 'clientRecieveGreenCard', greenCards[currentGreen]);
     for (var i = 0; i < players.length; i++) { //Fill each hand 
             fillHand(players[i].hand);
             sendToPlayer(gameID, players[i].username, 'clientUpdateHand', players[i].hand);
     }
+    turnPhase = tpExpectingPlayerCards;
 }
 
 

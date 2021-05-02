@@ -2,6 +2,7 @@ var socket = io(); //The socket connection to the server
 var gameID = sessionStorage.getItem('gameID'); //The gameID
 var username = sessionStorage.getItem('username'); //The client's username
 var isJudge; //Whether or not the player is the judge or not in a given round
+var round; //Integer round number so that that messages sent to host can be tagged with round for validation
 
 //Send an event to the server that the client has been redirected.
 socket.emit('serverClientRedirected', {gameID: gameID, username: username});
@@ -13,10 +14,11 @@ socket.on('clientPersonalMessage', function(message) { // message is string to d
     document.getElementById('personalMessage').textContent = message;
 });
 
-socket.on('clientDeclareJudge', function(message) { //message is judge username
+socket.on('clientDeclareJudge', function(message) { //message is {judge: username,  round: number}
     console.log('got to the clientDeclareJudge handler');
+    round = message.round;
     changeScreenTo('inRound');
-    isJudge = (message == username);
+    isJudge = (message.judge == username);
     var role;
     if (isJudge) {
         role = 'judge';
@@ -65,11 +67,11 @@ function displayHand(hand) {
 function chooseCard(cardIndex) {
     if (!isJudge) {
         changeScreenTo('postSelect');
-        sendToHost(gameID, 'hostReceiveChosenCard', {username: username, selectedCardIndex: cardIndex});
+        sendToHost(gameID, 'hostReceiveChosenCard', {username: username, selectedCardIndex: cardIndex, round: round});
     }
     else {
         changeScreenTo('postJudging');
-        sendToHost(gameID, 'hostRecieveWinningCard', cardIndex);
+        sendToHost(gameID, 'hostRecieveWinningCard', {cardIndex: cardIndex, round: round});
     }
 }
 
