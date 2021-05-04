@@ -13,6 +13,8 @@ const endRoundTime = 5; //The number of seconds after each round that there is a
 var turnPhase; //The current turn phase should be one of the following constants
 const tpExpectingPlayerCards = 1;//The phase when the players should choose their best card
 const tpExpectingJudgeCard = 2; //The phase when the judge should choose the winning card
+
+
 //The server-required "gameDescriptor" which consistes of the min and max player count of a game, and the url a client should direct to
 const gameDescriptor = {
     minPlayers: 2,

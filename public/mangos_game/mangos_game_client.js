@@ -4,6 +4,7 @@ var username = sessionStorage.getItem('username'); //The client's username
 var isJudge; //Whether or not the player is the judge or not in a given round
 var round; //Integer round number so that that messages sent to host can be tagged with round for validation
 
+
 //Send an event to the server that the client has been redirected.
 socket.emit('serverClientRedirected', {gameID: gameID, username: username});
 //Change the screen to the intro screen.
@@ -81,3 +82,4 @@ function changeScreenTo(screen) {
         document.getElementById(screens[i]).style.display = (screens[i] === screen ? 'block' : 'none');
     }
 }
+
