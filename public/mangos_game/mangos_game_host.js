@@ -13,7 +13,11 @@ const endRoundTime = 5; //The number of seconds after each round that there is a
 var turnPhase; //The current turn phase should be one of the following constants
 const tpExpectingPlayerCards = 1;//The phase when the players should choose their best card
 const tpExpectingJudgeCard = 2; //The phase when the judge should choose the winning card
-
+const millisecondsPerSecond = 1000;
+const secondsInRound = 30;
+const secondsInJudging = 20;
+var timerID;
+var secondsLeft;
 
 //The server-required "gameDescriptor" which consistes of the min and max player count of a game, and the url a client should direct to
 const gameDescriptor = {
@@ -30,6 +34,7 @@ socket.on('hostRegisterNewGame', function(message) { //message is the gameID
     console.log(`The code is ${message}`);
     gameID = message;
     document.getElementById('gameID').textContent = `Your Game ID is ${gameID}`;
+    document.getElementById('lobbyMusic').play();
 });
 
 //When the server gives us a new player in the game, add them to the player list and update the screen with their entry
@@ -41,7 +46,51 @@ socket.on('hostNewPlayerList', function(message) { //message is the list of play
 
 //The function plays a round of mangos to mangos. 
 socket.on('hostGameStart', function () {
+    document.getElementById('lobbyMusic').pause();
     document.getElementById('startMessage').textContent = 'The game has started!';
+    document.getElementById('mangosIntro').play();
+});
+
+
+socket.on('hostReceiveChosenCard', function(message) { //message has a username and selectedCardIndex and round
+    if (message.round == currentGreen && turnPhase == tpExpectingPlayerCards) {  
+        var player = getPlayerByName(message.username);
+        player.selectedCardIndex = message.selectedCardIndex;
+        player.hand[player.selectedCardIndex].username = message.username;
+        selectedCards.push(player.hand[player.selectedCardIndex]);
+        console.log(`selectedCards has increased to: ${selectedCards}`);
+        
+        document.getElementById('selectedCardNum').textContent = `${selectedCards.length} cards have been submitted`;
+        if (selectedCards.length === players.length - 1) {
+            inJudging();
+        }
+    }
+});
+
+//Remove all the used cards from the players' hands as well as set the players to not have selected a card.
+socket.on('hostReceiveWinningCard', function(message) { //message is {cardIndex: cardIndex, round: round}
+    stopStopWatch('suspenseMusic');
+    if (message.round == currentGreen && turnPhase == tpExpectingJudgeCard) {
+        changeScreenTo('endRound');
+        var selectedIndex = message.cardIndex;
+        document.getElementById('winner').innerHTML = `${selectedCards[selectedIndex].username} 
+            won with the card \"${selectedCards[selectedIndex].title}\" <br>`;
+        document.getElementById('winningcard_desc').innerHTML = `Description: 
+            ${selectedCards[selectedIndex].descrip}`;
+        var winner = getPlayerByName(selectedCards[selectedIndex].username)
+        winner.score++;
+        updateScore('playerScores');
+        console.log('calling from hostReceiveWinningCard');
+        if (winner.score == pointsToWin) {
+            endGame(winner);
+        }
+        else {
+            cleanUpAndPrepareAndDoNextRound();
+        }
+    }
+});
+
+function startFirstRound() {
     shuffleCards(redCards);
     shuffleCards(greenCards);
     currentRed = 0;
@@ -55,57 +104,78 @@ socket.on('hostGameStart', function () {
     judgeIndex = Math.floor(Math.random() * players.length);
     console.log('starting the first round');
     doNextRound();
-});
+}
 
-//Remove all the used cards from the players' hands as well as set the players to not have selected a card.
-socket.on('hostReceiveChosenCard', function(message) { //message has a username and selectedCardIndex and round
-    if (message.round == currentGreen && turnPhase == tpExpectingPlayerCards) {  
-        var player = getPlayerByName(message.username);
-        player.selectedCardIndex = message.selectedCardIndex;
-        player.hand[player.selectedCardIndex].username = message.username;
-        selectedCards.push(player.hand[player.selectedCardIndex]);
-        console.log(`selectedCards has increased to: ${selectedCards}`);
-        
-        document.getElementById('selectedCardNum').textContent = `${selectedCards.length} cards have been submitted`;
-        if (selectedCards.length === players.length - 1) {
-            changeScreenTo('inJudging');
-            turnPhase = tpExpectingJudgeCard;
-            document.getElementById('remindGreenCard').innerHTML = `The green card is: \"${greenCards[currentGreen].title}\" <br> ${greenCards[currentGreen].descrip}`;
-            str = '';
-            for (var i = 0; i < selectedCards.length; i++) {
-                str += `<div class="card bg-danger"><div class="card-body text-center" onClick = 
-                        "chooseCard(${i})"> <p class="card-text"> ${selectedCards[i].title} <br> 
-                        ${selectedCards[i].descrip} </p></div></div>`;
-            }
-            document.getElementById('chosenCards').innerHTML = str;
-            sendToPlayer(gameID, players[judgeIndex].username, 'clientCardsToJudge', selectedCards);
-        }
-    }
-});
+function noResponseFromJudge() {
+    changeScreenTo('noCardsSubmittedByJudge');
+    players[judgeIndex].score--;
+    cleanUpAndPrepareAndDoNextRound();
+}
 
-socket.on('hostRecieveWinningCard', async function(message) { //message is {cardIndex: cardIndex, round: round}
-    if (message.round == currentGreen && turnPhase == tpExpectingJudgeCard) {
-        changeScreenTo('endRound');
-        var selectedIndex = message.cardIndex;
-        document.getElementById('winner').innerHTML = `${selectedCards[selectedIndex].username} 
-            won with the card \"${selectedCards[selectedIndex].title}\" <br>`;
-        document.getElementById('winningcard_desc').innerHTML = `Description: 
-            ${selectedCards[selectedIndex].descrip}`;
-        var winner = getPlayerByName(selectedCards[selectedIndex].username)
-        winner.score++;
-        updateScore('playerScores');
-        await sleep(endRoundTime * 1000);
-        judgeIndex = (judgeIndex + 1) % players.length;
-        currentGreen++;
-        removeUsedCards();
-        if (winner.score == pointsToWin) {
-            endGame(winner);
-        }
-        else {
-            doNextRound();
-        }
+function cleanUpAndPrepareAndDoNextRound() {
+    removeUsedCards();
+    setTimeout(prepareAndDoNextRound, millisecondsPerSecond * endRoundTime);
+}
+
+function prepareAndDoNextRound() {
+    prepareForNextRound();
+    doNextRound();
+}
+
+function prepareForNextRound() {
+    judgeIndex = (judgeIndex + 1) % players.length;
+    currentGreen++;
+}
+
+//Only one stopwatch can be running at once. Args: seconds the timer runs, the audio that plays as the timer tics, and the function called at the end of the timer. 
+function startStopWatch(seconds, audioTag, clockID, timerEndFunction) {
+    document.getElementById(audioTag).currentTime = 0;
+    document.getElementById(audioTag).play();
+    secondsLeft = seconds;
+    console.log('starting stopwatch');
+    document.getElementById(clockID).textContent = secondsLeft;
+    timerID = window.setInterval(displayTimeLeft, millisecondsPerSecond, timerEndFunction, audioTag, clockID);  
+}
+
+function displayTimeLeft(timerEndFunction, audioTag, clockID) {
+    document.getElementById(clockID).textContent = --secondsLeft;
+    if (secondsLeft == 0) {
+        stopStopWatch(audioTag);
+        console.log('timer stopped');
+        timerEndFunction();
+    }   
+}
+
+//Stops stopwatch. Can be called multiple times for a given turnPhase
+function stopStopWatch(audioTag) {
+    clearInterval(timerID);
+    document.getElementById(audioTag).pause();
+}
+
+//This is called when all cards have been submitted by players or if the inRound timer runs out
+function inJudging() {
+    stopStopWatch('clockTick');
+    if (selectedCards.length == 0) {
+        console.log('no cards were submitted at end of timer');
+        changeScreenTo('noCardsSubmittedByPlayers');
+        setTimeout(prepareAndDoNextRound, millisecondsPerSecond * endRoundTime);
     }
-});
+    else {
+        changeScreenTo('inJudging');
+        turnPhase = tpExpectingJudgeCard;
+        startStopWatch(secondsInJudging, 'suspenseMusic', 'timeLeftJudge', noResponseFromJudge);
+        document.getElementById('remindGreenCard').innerHTML = `The green card is: \"${greenCards[currentGreen].title}\" <br> ${greenCards[currentGreen].descrip}`;
+        str = '';
+        for (var i = 0; i < selectedCards.length; i++) {
+            str += `<div class="card bg-danger"><div class="card-body text-center" onClick = 
+                    "chooseCard(${i})"> <p class="card-text"> ${selectedCards[i].title} <br> 
+                    ${selectedCards[i].descrip} </p></div></div>`;
+        }
+        document.getElementById('chosenCards').innerHTML = str;
+        sendToPlayer(gameID, players[judgeIndex].username, 'clientCardsToJudge', selectedCards);
+    }
+}
+
 
 //Get the red cards array from the website I have saved
 function storeRed() {
@@ -184,7 +254,8 @@ function sendToPlayer(gameID, username, event, message) {
 
 //This function completes a single round of mangos to mangos
 function doNextRound() {
-    changeScreenTo('inRound')
+    console.log('entering doNextRound');
+    changeScreenTo('inRound');
     document.getElementById('selectedCardNum').textContent = '0 cards have been submitted';
     document.getElementById('judgeDisplay').textContent = `This round's judge is: 
             ${players[judgeIndex].username}`;
@@ -197,6 +268,7 @@ function doNextRound() {
             sendToPlayer(gameID, players[i].username, 'clientUpdateHand', players[i].hand);
     }
     turnPhase = tpExpectingPlayerCards;
+    startStopWatch(secondsInRound, 'clockTick', 'timeLeftPlayers', inJudging); //ADD FUNCTION AT TIMER END
 }
 
 
@@ -260,14 +332,10 @@ function getPlayerByName(name) {
     return undefined;
 }
 
-//SLEEP FUNCTION COPIED FROM stackoverflow.com/questions/951021/what-is-the-javascript-version-of-sleep
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
 
 //Change the screen to an inputted screen, as long as it is in the screens array
 function changeScreenTo(screen) {
-    const screens = ['pageIntro', 'inRound', 'inJudging', 'endRound', 'endGame'];
+    const screens = ['pageIntro', 'inRound', 'inJudging', 'endRound', 'endGame', 'noCardsSubmittedByPlayers', 'noCardsSubmittedByJudge'];
     for (var i = 0; i < screens.length; i++) {
         document.getElementById(screens[i]).style.display = (screens[i] === screen ? 'block' : 'none');
     }

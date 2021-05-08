@@ -29,7 +29,14 @@
         <h3 id = "judgeDisplay"></h3> 
         <div class="card bg-success"> <div class="card-body text-center" id="greenCard"> </div> </div>
         <br />
-        <p id = "selectedCardNum"></p>
+        <h3 id = "selectedCardNum"></h3>
+        <h3>Time left to submit cards: <span id = "timeLeftPlayers"></span></h3>
+      </div>
+      <div id = "noCardsSubmittedByPlayers" class = "jumbotron text-center" style = "display: none;"> 
+        <h1>No cards were submitted by players. Moving on to a new round.</h1>
+      </div>
+      <div id = "noCardsSubmittedByJudge" class = "jumbotron text-center" style = "display: none;"> 
+        <h1>No card was selected by the judge. Judge looses a point. </h1>
       </div>
       <div id = "inJudging" class = "jumbotron text-center" style = "display: none;">
         <div class="card bg-success">
@@ -37,6 +44,7 @@
         </div>
         <div class="card-columns" id="chosenCards"> 
         </div>
+        <h3>Time left for judge: <span id = "timeLeftJudge"></span></h3>
       </div>
       <div id = "endRound" class = "jumbotron text-center" style = "display: none;">
         <h1 id = "winner"></h1>
@@ -47,6 +55,21 @@
         <h1 id = "displayWinner"></h1>
         <button type = "button" onclick = "startGame()">Play Again!</button>
       </div>
+      <audio id="clockTick" preload="auto"> 
+        <source src="clockTicking.mp3">
+      </audio>
+      <audio id="suspenseMusic" preload="auto" volume="0.1"> 
+        <source src="mixkit-game-show-suspense-waiting-667.wav">
+      </audio>
+      <audio id="happyMusic" preload="auto"> 
+        <source src="mixkit-game-show-happy-timer-666.wav">
+      </audio>
+      <audio id="mangosIntro" preload="auto" onended="startFirstRound()">
+        <source src="Loud Mangos Intro.mp3">
+      </audio>
+      <audio loop id="lobbyMusic" preload="auto">
+        <source src="Good-Morning-Doctor-Weird.mp3">
+      </audio>
 	  <!-- Bootstrap insert, don't edit above /body -->
 	  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" 
 		crossorigin="anonymous"></script>

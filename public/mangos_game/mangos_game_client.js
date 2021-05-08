@@ -72,7 +72,7 @@ function chooseCard(cardIndex) {
     }
     else {
         changeScreenTo('postJudging');
-        sendToHost(gameID, 'hostRecieveWinningCard', {cardIndex: cardIndex, round: round});
+        sendToHost(gameID, 'hostReceiveWinningCard', {cardIndex: cardIndex, round: round});
     }
 }
 
