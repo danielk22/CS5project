@@ -18,6 +18,7 @@ const secondsInRound = 30;
 const secondsInJudging = 20;
 var timerID;
 var secondsLeft;
+var quickPickEnabled;
 
 //The server-required "gameDescriptor" which consistes of the min and max player count of a game, and the url a client should direct to
 const gameDescriptor = {
@@ -62,6 +63,9 @@ socket.on('hostReceiveChosenCard', function(message) { //message has a username 
         
         document.getElementById('selectedCardNum').textContent = `${selectedCards.length} cards have been submitted`;
         if (selectedCards.length === players.length - 1) {
+            inJudging();
+        }
+        else if (selectedCards.length == players.length - 2 && quickPickEnabled && players.length > 2) {
             inJudging();
         }
     }
@@ -152,7 +156,7 @@ function stopStopWatch(audioTag) {
     document.getElementById(audioTag).pause();
 }
 
-//This is called when all cards have been submitted by players or if the inRound timer runs out
+//This is called when all* cards have been submitted by players or if the inRound timer runs out
 function inJudging() {
     stopStopWatch('clockTick');
     if (selectedCards.length == 0) {
@@ -236,6 +240,7 @@ function startGame() {
         ${gameDescriptor.minPlayers} or greater than ${gameDescriptor.maxPlayers}.`
     }
     else {
+        quickPickEnabled = document.getElementById('quickPickChoice').checked;
         console.log('Game has been started!');
         socket.emit('serverGameStartRequested', gameID);
     }
@@ -264,8 +269,8 @@ function doNextRound() {
     sendToAllPlayers(gameID, 'clientDeclareJudge', {judge: players[judgeIndex].username, round: currentGreen});
     sendToAllPlayers(gameID, 'clientRecieveGreenCard', greenCards[currentGreen]);
     for (var i = 0; i < players.length; i++) { //Fill each hand 
-            fillHand(players[i].hand);
-            sendToPlayer(gameID, players[i].username, 'clientUpdateHand', players[i].hand);
+        fillHand(players[i].hand);
+        sendToPlayer(gameID, players[i].username, 'clientUpdateHand', players[i].hand);
     }
     turnPhase = tpExpectingPlayerCards;
     startStopWatch(secondsInRound, 'clockTick', 'timeLeftPlayers', inJudging); //ADD FUNCTION AT TIMER END
