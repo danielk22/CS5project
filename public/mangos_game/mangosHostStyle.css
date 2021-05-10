@@ -8,6 +8,23 @@
     color: black /* contrasts with green or red card background */
 }
 
+.hand-head
+{
+	color: black
+}
+.hand-body
+{
+	color: white
+}
+.bg-red
+{
+	background-color: #fc8674
+}
+.bg-green
+{
+	background-color: #adfca9
+}
+
 body
 {
 	width: 95%;
@@ -53,4 +70,22 @@ body
 {
 	width: 30%;
 	font-size: 14px;
+}
+
+/* Original "inspiration" code from user:Faheel at 
+https://stackoverflow.com/questions/34140793/bootstrap-4-responsive-cards-in-card-columns*/
+@media (min-width: 24em) {
+    .card-columns {
+        -webkit-column-count: 2;
+        -moz-column-count: 2;
+        column-count: 2;
+    }
+}
+
+@media (min-width: 34em) {
+    .card-columns {
+        -webkit-column-count: 4;
+        -moz-column-count: 4;
+        column-count: 4;
+    }
 }

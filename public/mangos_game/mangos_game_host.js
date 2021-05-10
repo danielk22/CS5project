@@ -67,6 +67,7 @@ socket.on('hostReceiveChosenCard', function(message) { //message has a username 
         }
         else if (selectedCards.length == players.length - 2 && quickPickEnabled && players.length > 2) {
             inJudging();
+            socket.emit('clientPostSelect', true);
         }
     }
 });
@@ -131,7 +132,9 @@ function prepareForNextRound() {
     currentGreen++;
 }
 
-//Only one stopwatch can be running at once. Args: seconds the timer runs, the audio that plays as the timer tics, and the function called at the end of the timer. 
+/* Only one stopwatch can be running at once. Args: 
+    seconds the timer runs, the audio that plays as the timer tics, 
+    and the function called at the end of the timer. */
 function startStopWatch(seconds, audioTag, clockID, timerEndFunction) {
     document.getElementById(audioTag).currentTime = 0;
     document.getElementById(audioTag).play();
@@ -168,12 +171,16 @@ function inJudging() {
         changeScreenTo('inJudging');
         turnPhase = tpExpectingJudgeCard;
         startStopWatch(secondsInJudging, 'suspenseMusic', 'timeLeftJudge', noResponseFromJudge);
-        document.getElementById('remindGreenCard').innerHTML = `The green card is: \"${greenCards[currentGreen].title}\" <br> ${greenCards[currentGreen].descrip}`;
+        document.getElementById('remindGreenCard').innerHTML = `The green card is:
+                \"${greenCards[currentGreen].title}\" <br> ${greenCards[currentGreen].descrip}`;
+        /* above display depreciated */
         str = '';
+
         for (var i = 0; i < selectedCards.length; i++) {
-            str += `<div class="card bg-danger"><div class="card-body text-center" onClick = 
-                    "chooseCard(${i})"> <p class="card-text"> ${selectedCards[i].title} <br> 
-                    ${selectedCards[i].descrip} </p></div></div>`;
+            str += `<div class="card border-danger bg-red"> <div class="card-body text-center"> 
+            <img class="card-img-top" src="redapple.gif" alt="Red Apple image" 
+            > <br/> <h4 class="card-title hand-head"> ${selectedCards[i].title} </h4>
+            <p class="card-text hand-body"> ${selectedCards[i].descrip} </p></div></div>`;
         }
         document.getElementById('chosenCards').innerHTML = str;
         sendToPlayer(gameID, players[judgeIndex].username, 'clientCardsToJudge', selectedCards);
@@ -241,6 +248,8 @@ function startGame() {
     }
     else {
         quickPickEnabled = document.getElementById('quickPickChoice').checked;
+        document.getElementById('options').style.display = "none";
+        document.getElementById('rules').style.display = "none";
         console.log('Game has been started!');
         socket.emit('serverGameStartRequested', gameID);
     }
@@ -264,8 +273,9 @@ function doNextRound() {
     document.getElementById('selectedCardNum').textContent = '0 cards have been submitted';
     document.getElementById('judgeDisplay').textContent = `This round's judge is: 
             ${players[judgeIndex].username}`;
-    document.getElementById('greenCard').innerHTML = `<h4 class="card-title"> ${greenCards[currentGreen].title} </h4> 
-            <p class="card-text"> ${greenCards[currentGreen].descrip} </p>`;
+    document.getElementById('greenCard').innerHTML = `<h4 class="card-title hand-head"> 
+            ${greenCards[currentGreen].title} </h4> <p class="card-text"> 
+            ${greenCards[currentGreen].descrip} </p>`;
     sendToAllPlayers(gameID, 'clientDeclareJudge', {judge: players[judgeIndex].username, round: currentGreen});
     sendToAllPlayers(gameID, 'clientRecieveGreenCard', greenCards[currentGreen]);
     for (var i = 0; i < players.length; i++) { //Fill each hand 

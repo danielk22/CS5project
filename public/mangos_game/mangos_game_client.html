@@ -25,16 +25,21 @@
                     crossorigin="anonymous"></script>
         </body>
     </div>
-    <div id = inRound style = "display: none;" class = "container jumbotron text-center"> 
+    <div id = "inRound" style = "display: none;" class = "container jumbotron text-center"> 
         <h4 class="sub-header" id = "role"></h4> <br/>
-        <div class="card bg-success">
-            <div class="card-body text-center" id="greenCard"> </div>
-        </div>
-        <div class="card-columns" id="hand"> 
+        <div class="card-columns">
+            <div class="card bg-green">
+                <img class="card-img-top" src="greenapple.gif" alt="Green Apple image">
+                <div class="card-body text-center" id="greenCard"> </div>
+            </div>
+            <div id="hand"> </div>
         </div>
     </div>
     <div id = "postSelect" style = "display: none;" class = "container jumbotron text-center">
         <h1>Thank you for submitting a card! Once everyone has selected a card, the judge will choose!</h1>
+    </div>
+    <div id = "noSelect" style="display: none;" class="container jumbotron text-center">
+        <h1> You have unfortunately ran out of time to submit a card. </h1>
     </div>
     <div id = "postJudging" style = "display: none;" class = "container jumbotron text-center">
         <h1>You have chosen wisely!</h1>

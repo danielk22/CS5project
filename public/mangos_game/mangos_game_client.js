@@ -23,7 +23,7 @@ socket.on('clientDeclareJudge', function(message) { //message is {judge: usernam
     var role;
     if (isJudge) {
         role = 'judge';
-        document.getElementById('hand').textContent = '';
+        document.getElementById('hand').textContent = ''; //works weird with displayHand()
     }
     else {
         role = 'player';
@@ -32,8 +32,8 @@ socket.on('clientDeclareJudge', function(message) { //message is {judge: usernam
 });
 
 socket.on('clientRecieveGreenCard', function(message) { //message is the green card
-    document.getElementById('greenCard').innerHTML = `<h4 class="card-title"> ${message.title} </h4> 
-            <p class="card-text"> ${message.descrip} </p>`;
+    document.getElementById('greenCard').innerHTML = `<h4 class="card-title hand-head"> ${message.title}
+            </h4> <p class="card-text"> ${message.descrip} </p>`;
 });
 
 socket.on('clientUpdateHand', function(message) { //message is the player's hand
@@ -49,6 +49,16 @@ socket.on('clientCardsToJudge', function(message) { //message is an array of car
     displayHand(cards);
 });
 
+//currently only called when no card selected (correlates to when message = true)
+socket.on('clientPostSelect', function(message) {
+    if(!(document.getElementById('inRound').style.display == 'none')) { //if in round
+        changeScreenTo('noSelect');
+    }
+    else {
+
+    }
+});
+
 //Send an event to the host along with a message and the gameID
 function sendToHost(gameID, event, message) {
     socket.emit('serverSendToHost', {gameID: gameID, event: event, hostMessage: message})
@@ -57,9 +67,10 @@ function sendToHost(gameID, event, message) {
 function displayHand(hand) {
     str = '';
     for (var i = 0; i < hand.length; i++) {
-        str += `<div class="card bg-danger"><div class="card-body text-center" onClick = 
-                "chooseCard(${i})"> <h4 class="card-title"> ${hand[i].title} </h4>
-                <p class="card-text"> ${hand[i].descrip} </p></div></div>`; 
+        str += `<div class="card bg-red"> <div class="card-body text-center" onClick = 
+                "chooseCard(${i})"> <img class="card-img-top" src="redapple.gif" alt="Red Apple image" 
+                > <br/> <h4 class="card-title hand-head"> ${hand[i].title} </h4>
+                <p class="card-text hand-body"> ${hand[i].descrip} </p></div></div>`; 
     }
     document.getElementById('hand').innerHTML = str;
 }
