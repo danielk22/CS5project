@@ -14,6 +14,29 @@
 			<div class = "jumbotron text-center" width="30%">
 				<h1> Mangos Game Client</h1>
 				<h3 id = "gameStatus">Get ready to play!</h3>
+                <button href="#rules" class="btn btn-info" data-toggle="collapse" id="rulesButton"> 
+                    View Rules </button>
+                <div id="rules" class="collapse">
+                <!-- TODO: edit rules -->
+                <br/>
+                <p> 1. Players rotate between being the judge (who receives red cards) and normal players (who choose
+                    red cards). There is one judge per round who is given a random green card, as is displayed on
+                    the host's screen. </p>
+                <p> 2. Players (except the judge) quickly click the red apple card
+                    from their hand that is best described by the word on the
+                    green apple card played by the judge. </p>
+                <p> Quick Pick Option:
+                    With five or more players, you might want to try the Quick Pick
+                    Option. The last red apple card that is selected will not be
+                    judged and is returned to that player’s hand. If you snooze, you lose! </p>
+                <p> 3. After selection is finished, selected red cards will appear on the screen along with
+                    the green card. The judge selects the red card they think is
+                    best described by the word on the green apple card. </p>
+                <p> 4. The winning player receives a point and play continues with another green card. Each
+                    player receives enough red cards to have seven total after each round. </p>
+                <p> 5. Play continues following steps 1–4 until someone has earned
+                    enough green apple cards to win the game! </p>
+                </div>
 			</div>
             <h3 id = "personalMessage"></h3>
 			<!-- Bootstrap insert, don't edit above /body -->

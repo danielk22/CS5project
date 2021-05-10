@@ -70,6 +70,7 @@ body
 {
 	width: 30%;
 	font-size: 14px;
+	border: 2px solid yellowgreen;
 }
 
 /* Original "inspiration" code from user:Faheel at 
@@ -88,4 +89,8 @@ https://stackoverflow.com/questions/34140793/bootstrap-4-responsive-cards-in-car
         -moz-column-count: 4;
         column-count: 4;
     }
+}
+
+.collapse.show {
+	visibility: visible;
 }

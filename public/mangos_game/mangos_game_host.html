@@ -15,13 +15,13 @@
 		    <table class = "table usertable table-striped table-hover table-sm center" id = "players">
           <tr><th>Username</th></tr>
         </table>
-        <br/> <button type = "button" class = "btn btn-success" onclick = "startGame()">
+        <br/> <h6 id = "gameID"></h6>
+        <button type = "button" class = "btn btn-success" onclick = "startGame()">
           Start Game!
         </button>
-        <br/> <p id = "gameID"></p>
         <p id="startError" class="error"> </p>
         <h3 id = "startMessage"></h3>
-        <button href="#options" class="btn btn-info" data-toggle="collapse" id="options">
+        <button href="#options" class="btn btn-info" data-toggle="collapse" id="optionsButton">
            Additional Options </button>
         <div id="options" class="collapse"> 
           <br/>
@@ -29,9 +29,9 @@
           <input type="checkbox" id="quickPickChoice" name="quickpick"> 
         </div>
         <ol id = "welcomeList"></ol>
-    <button href="#rules" class="btn btn-info" data-toggle="collapse" id="rules"> View Rules </button>
+    <button href="#rules" class="btn btn-info" data-toggle="collapse" id="rulesButton"> View Rules </button>
     <div id="rules" class="collapse">
-      <!-- TODO: write rules -->
+      <!-- TODO: edit rules -->
       <br/>
       <p> 1. Players rotate between being the judge (who receives red cards) and normal players (who choose
         red cards). There is one judge per round who is given a random green card, as is displayed on
@@ -45,9 +45,7 @@
         judged and is returned to that player’s hand. If you snooze, you lose! </p>
       <p> 3. After selection is finished, selected red cards will appear on the screen along with
         the green card. The judge selects the red card they think is
-        best described by the word on the green apple card. The player
-        of the selected red apple card is awarded the green apple card
-        played by the judge. </p>
+        best described by the word on the green apple card. </p>
       <p> 4. The winning player receives a point and play continues with another green card. Each
         player receives enough red cards to have seven total after each round. </p>
       <p> 5. Play continues following steps 1–4 until someone has earned

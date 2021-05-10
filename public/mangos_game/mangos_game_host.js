@@ -34,7 +34,7 @@ socket.emit('serverRegisterNewGame', gameDescriptor);
 socket.on('hostRegisterNewGame', function(message) { //message is the gameID
     console.log(`The code is ${message}`);
     gameID = message;
-    document.getElementById('gameID').textContent = `Your Game ID is ${gameID}`;
+    document.getElementById('gameID').textContent = `Game ID: ${gameID}`;
     document.getElementById('lobbyMusic').play();
 });
 
@@ -249,7 +249,9 @@ function startGame() {
     else {
         quickPickEnabled = document.getElementById('quickPickChoice').checked;
         document.getElementById('options').style.display = "none";
-        document.getElementById('rules').style.display = "none";
+        document.getElementById('optionsButton').style.display = "none";
+        document.getElementById('startError').style.display = "none";
+        //document.getElementById('rules').style.display = "none";
         console.log('Game has been started!');
         socket.emit('serverGameStartRequested', gameID);
     }
