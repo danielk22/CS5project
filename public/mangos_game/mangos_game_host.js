@@ -19,6 +19,8 @@ const secondsInJudging = 20;
 var timerID;
 var secondsLeft;
 var quickPickEnabled;
+var numConsecTimeOuts = 0;
+const MAX_TIME_OUTS = 5;
 
 //The server-required "gameDescriptor" which consistes of the min and max player count of a game, and the url a client should direct to
 const gameDescriptor = {
@@ -64,9 +66,11 @@ socket.on('hostReceiveChosenCard', function(message) { //message has a username 
         document.getElementById('selectedCardNum').textContent = `${selectedCards.length} cards have been submitted`;
         if (selectedCards.length === players.length - 1) {
             inJudging();
+            numConsecTimeOuts = 0;
         }
         else if (selectedCards.length == players.length - 2 && quickPickEnabled && players.length > 2) {
             inJudging();
+            numConsecTimeOuts = 0;
             socket.emit('clientPostSelect', true);
         }
     }
@@ -150,6 +154,9 @@ function displayTimeLeft(timerEndFunction, audioTag, clockID) {
         stopStopWatch(audioTag);
         console.log('timer stopped');
         timerEndFunction();
+        if(numConsecTimeOuts == MAX_TIME_OUTS - 1) {
+            //TODO: close game
+        }
     }   
 }
 
