@@ -64,6 +64,13 @@ io.on('connection', function(socket) {
         io.to(myGames[message.gameID].hostSocketID).emit('hostNewPlayerList', myGames[message.gameID].players);
     });
 
+    socket.on('serverClientReconnected', function(message) { //message is player's username and gameID
+        console.log('Got a serverClientReconnected');
+        var player = getPlayerByName(message.username, message.gameID);
+        player.socketID = socket.id;
+        console.log(`${player.username} has a new socketID: ${player.socketID}`);
+    })
+
     socket.on('serverGameStartRequested', function(message) { // message is gameID
         myGames[message].hasStarted = true; 
         socket.emit('hostGameStart');
