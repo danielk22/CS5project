@@ -94,9 +94,16 @@ io.on('connection', function(socket) {
         io.to(hostSocket).emit(message.event, message.hostMessage);
     });
 
-
     socket.on('disconnect', function() {
+        var hostSocket = "";
+        for(const game in myGames) {
+            if(game.players.includes(socket)) {
+                hostSocket = game.hostSocketID;
+                break;
+            }
+        }
         console.log(`${socket.id} disconnected!`);
+        io.to(hostSocket).emit('playerDisconnect', disconnUser = socket.id);
     });
 });
 
