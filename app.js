@@ -52,6 +52,7 @@ io.on('connection', function(socket) {
             message.clientURL = myGames[message.gameID].clientURL;
             console.log(`The unique name is ${message.username}`);
             socket.emit('clientRedirect', message);
+            io.to(myGames[message.gameID].hostSocketID).emit('hostNewPlayerList', myGames[message.gameID].players);
         }
         
     });
@@ -61,15 +62,14 @@ io.on('connection', function(socket) {
         player.socketID = socket.id;
         console.log(`Received serverClientRedirected event: ${socket.id}`);
         console.log(`Sending to socketID ${myGames[message.gameID].hostSocketID}`);
-        io.to(myGames[message.gameID].hostSocketID).emit('hostNewPlayerList', myGames[message.gameID].players);
     });
 
-    socket.on('serverClientReconnected', function(message) { //message is player's username and gameID
-        console.log('Got a serverClientReconnected');
-        var player = getPlayerByName(message.username, message.gameID);
-        player.socketID = socket.id;
-        console.log(`${player.username} has a new socketID: ${player.socketID}`);
-    })
+    // socket.on('serverClientReconnected', function(message) { //message is player's username and gameID
+    //     console.log('Got a serverClientReconnected');
+    //     var player = getPlayerByName(message.username, message.gameID);
+    //     player.socketID = socket.id;
+    //     console.log(`${player.username} has a new socketID: ${player.socketID}`);
+    // })
 
     socket.on('serverGameStartRequested', function(message) { // message is gameID
         myGames[message].hasStarted = true; 
@@ -95,15 +95,15 @@ io.on('connection', function(socket) {
     });
 
     socket.on('disconnect', function() {
-        var hostSocket = "";
-        for(const game in myGames) {
-            if(game.players.includes(socket)) {
-                hostSocket = game.hostSocketID;
-                break;
-            }
-        }
-        console.log(`${socket.id} disconnected!`);
-        io.to(hostSocket).emit('playerDisconnect', disconnUser = socket.id);
+        // var hostSocket = "";
+        // for(const game in myGames) {
+        //     if(game.players.includes(socket)) {
+        //         hostSocket = game.hostSocketID;
+        //         break;
+        //     }
+        // }
+        // console.log(`${socket.id} disconnected!`);
+        // io.to(hostSocket).emit('playerDisconnect', disconnUser = socket.id);
     });
 });
 

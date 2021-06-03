@@ -4,25 +4,9 @@ var username = sessionStorage.getItem('username'); //The client's username
 var isJudge; //Whether or not the player is the judge or not in a given round
 var round; //Integer round number so that that messages sent to host can be tagged with round for validation
 
-if (sessionStorage.getItem('hasAlreadyConnected') == null) {
-    console.log('original connection');
-    //Send an event to the server that the client has been redirected.
-    socket.emit('serverClientRedirected', {gameID: gameID, username: username});
+changeScreenTo('pageIntro');
+socket.emit('serverClientRedirected', {gameID: gameID, username: username});
 
-    //Change the screen to the intro screen.
-    changeScreenTo('pageIntro');
-    sessionStorage.setItem('hasAlreadyConnected', true);
-}
-else {
-    console.log('reconnecting');
-    socket.emit('serverClientReconnected', {gameID: gameID, username: username});
-    changeScreenTo('pageReconnect');
-}
-
-//FOR 
-socket.on('clientPersonalMessage', function(message) { // message is string to display
-    document.getElementById('personalMessage').textContent = message;
-});
 
 socket.on('clientDeclareJudge', function(message) { //message is {judge: username,  round: number}
     console.log('got to the clientDeclareJudge handler');
