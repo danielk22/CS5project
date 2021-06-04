@@ -1,5 +1,6 @@
 # Jackbox-Like Game Server and Game
-## Authors: Daniel and Dylan
+## Authors: Daniel and Dylan, Lakeside School 
+
 ## Introduction
 This game server is a node.js based infrastructure for building web-based games. The server is similar
 to Jackbox games in that it can host multiple games of different types at once. A host browser which 
