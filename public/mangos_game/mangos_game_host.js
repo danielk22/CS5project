@@ -13,10 +13,10 @@ const endRoundTime = 5; //The number of seconds after each round that there is a
 var turnPhase; //The current turn phase should be one of the following constants
 const tpExpectingPlayerCards = 1;//The phase when the players should choose their best card
 const tpExpectingJudgeCard = 2; //The phase when the judge should choose the winning card
-const millisecondsPerSecond = 1000;
-const secondsInRound = 30;
-const secondsInJudging = 20;
-var timerID;
+const millisecondsPerSecond = 1000; //The number of milliseconds in a second
+const secondsInRound = 30; //The number of seconds that players have to submit their red cards in each round
+const secondsInJudging = 20; //The number of seconds that a judge has to choose a winning card in each round
+var timerID; 
 var secondsLeft;
 var quickPickEnabled;
 var numConsecTimeOuts = 0;
@@ -54,7 +54,8 @@ socket.on('hostGameStart', function () {
     document.getElementById('mangosIntro').play();
 });
 
-
+//The function that accepts each card chosen by players and decides whether everyone has submitted a card.
+//If so, the game moves to the 'inJudging' state. 
 socket.on('hostReceiveChosenCard', function(message) { //message has a username and selectedCardIndex and round
     if (message.round == currentGreen && turnPhase == tpExpectingPlayerCards) {  
         var player = getPlayerByName(message.username);
@@ -99,6 +100,8 @@ socket.on('hostReceiveWinningCard', function(message) { //message is {cardIndex:
     }
 });
 
+//This function is specific to the very first round of the game. It plays a round of Mangos to Mangos,
+//But also shuffles the decks beforehand and other things specific to the first round.
 function startFirstRound() {
     shuffleCards(redCards);
     shuffleCards(greenCards);
@@ -115,6 +118,7 @@ function startFirstRound() {
     doNextRound();
 }
 
+//Function that handles if the judge did not submit a card
 function noResponseFromJudge() {
     changeScreenTo('noCardsSubmittedByJudge');
     players[judgeIndex].score--;
