@@ -1,10 +1,16 @@
 # Jackbox-Like Game Server and Game
+## Authors: Daniel and Dylan
 ## Introduction
 This game server is a node.js based infrastructure for building web-based games. The server is similar
 to Jackbox games in that it can host multiple games of different types at once. A host browser which 
 runs all the server-side game logic connects to the game server which also communicates with every 
 client browser. 
 
+## How To Install the Game Server
+
+
+
+## How To Add Your Own Game
 To add a new game, you need to write a host.js/host.html and client.js/client.html. Please put these 
 in a new folder under public.
 
