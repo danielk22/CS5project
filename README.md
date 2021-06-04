@@ -99,4 +99,5 @@ event. We recommend copying the code below into your client.js:
 function sendToHost(gameID, event, message) {
     socket.emit('serverSendToHost', {gameID: gameID, event: event, hostMessage: message})
 }
+
 ```
