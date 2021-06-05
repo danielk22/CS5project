@@ -7,9 +7,46 @@ to Jackbox games in that it can host multiple games of different types at once. 
 runs all the server-side game logic connects to the game server which also communicates with every 
 client browser. 
 
-## How To Install the Game Server
+## How To Install the Game Server and Game
+1. Download or git clone this project's code from GitHub. 
 
+2. Download and install node.js from [nodejs.org](https://nodejs.org). 
 
+3. Open a terminal/shell window and cd into the downloaded project folder. 
+
+4. Run the following line in the terminal/shell:
+    ``` 
+    npm install
+    ```
+
+## How to Run the Game Server and Game Locally
+1. In a terminal/shell window cd'ed to the project directory, run the following line:
+    ```
+    node app.js
+    ```
+2. Open a browser and navigate to [localhost:8080](http://localhost:8080/).
+
+3. Select 'Host Mangos to Mangos Game'
+
+4. Friends on your local network (firewall permitting) can join your game at the same link: 
+    [localhost:8080](http://localhost:8080/) with the Game ID shown on the host's screen. 
+
+5. When all players have joined, press 'Start Game!' on the host screen.
+
+6. Play! 
+
+## How to Run the Code From the 2Dgames.fun Host
+
+1. Open a browser and navigate to [2Dgames.fun](https://2dgames.fun).
+
+2. Select 'Host Mangos to Mangos Game'
+
+3. Friends can join your game at the same link: 
+    [2Dgames.fun](https://2dgames.fun) with the Game ID shown on the host's screen. 
+
+4. When all players have joined, press 'Start Game!' on the host screen.
+
+5. Play! 
 
 ## How To Add Your Own Game
 To add a new game, you need to write a host.js/host.html and client.js/client.html. Please put these 
