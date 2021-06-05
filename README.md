@@ -52,7 +52,7 @@ client browser.
 To add a new game, you need to write a host.js/host.html and client.js/client.html. Please put these 
 in a new folder under public.
 
-The host.js requires:
+#### The host.js requires:
 1. At the beginning of your host.js you should include the following lines:
     ```
     var socket = io(); //The socket connection to the server
@@ -115,7 +115,7 @@ The host.js requires:
     ```
 
 
-The client.js requires: 
+#### The client.js requires: 
 1. At the beginning of your client.js, you should add the following lines: 
     ```
     var socket = io(); //The socket connection to the server
