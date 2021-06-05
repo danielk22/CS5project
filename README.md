@@ -1,5 +1,5 @@
 # Jackbox-Like Game Server and Game
-## Authors: Daniel and Dylan, Lakeside School 
+#### Authors: Daniel and Dylan, Lakeside School 
 
 ## Introduction
 This game server is a node.js based infrastructure for building web-based games. The server is similar
