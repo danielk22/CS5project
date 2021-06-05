@@ -4,6 +4,9 @@
     "scripts": {
         "start": "node app.js"
     },
+    "engines": {
+        "node": ">=14"
+    },
     "dependencies": {
         "express": "^4.17.1",
         "socket.io": "^3.0.3"
