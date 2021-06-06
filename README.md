@@ -137,3 +137,11 @@ in a new folder under public.
         socket.emit('serverSendToHost', {gameID: gameID, event: event, hostMessage: message})
     }
     ```
+
+## Third Party Acknowledgements
+
+
+Our program uses several assets (such as sound and card data) that others published on the web. Thank
+you to the web community for providing this. You can find all of our third party acknowledgements in
+[assets.xlsx](https://github.com/danielk22/CS5project/blob/master/public/mangos_game/Assets.xlsx).
+	 
