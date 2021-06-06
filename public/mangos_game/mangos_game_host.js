@@ -118,23 +118,26 @@ function startFirstRound() {
     doNextRound();
 }
 
-//Function that handles if the judge did not submit a card
+//Function that handles if the judge did not submit a card during a round
 function noResponseFromJudge() {
     changeScreenTo('noCardsSubmittedByJudge');
     players[judgeIndex].score--;
     cleanUpAndPrepareAndDoNextRound();
 }
 
+//Function that removes all the cards that were used in a round and sets up the next round
 function cleanUpAndPrepareAndDoNextRound() {
     removeUsedCards();
     setTimeout(prepareAndDoNextRound, millisecondsPerSecond * endRoundTime);
 }
 
+//Function that prepares and enacts a round
 function prepareAndDoNextRound() {
     prepareForNextRound();
     doNextRound();
 }
 
+//Function that prepares for a round by moving the judge index and current green card
 function prepareForNextRound() {
     judgeIndex = (judgeIndex + 1) % players.length;
     currentGreen++;
@@ -143,6 +146,7 @@ function prepareForNextRound() {
 /* Only one stopwatch can be running at once. Args: 
     seconds the timer runs, the audio that plays as the timer tics, 
     and the function called at the end of the timer. */
+//Function that startts a stopwatch and runs a function when it ends
 function startStopWatch(seconds, audioTag, clockID, timerEndFunction) {
     document.getElementById(audioTag).currentTime = 0;
     document.getElementById(audioTag).play();
@@ -152,6 +156,7 @@ function startStopWatch(seconds, audioTag, clockID, timerEndFunction) {
     timerID = window.setInterval(displayTimeLeft, millisecondsPerSecond, timerEndFunction, audioTag, clockID);  
 }
 
+//Function that displays the time left in a timer on the host screen.
 function displayTimeLeft(timerEndFunction, audioTag, clockID) {
     document.getElementById(clockID).textContent = --secondsLeft;
     if (secondsLeft == 0) {
@@ -171,6 +176,7 @@ function stopStopWatch(audioTag) {
 }
 
 //This is called when all* cards have been submitted by players or if the inRound timer runs out
+//It moves the game state to the inJudging mode.
 function inJudging() {
     stopStopWatch('clockTick');
     if (selectedCards.length == 0) {
@@ -299,7 +305,7 @@ function doNextRound() {
     startStopWatch(secondsInRound, 'clockTick', 'timeLeftPlayers', inJudging); //ADD FUNCTION AT TIMER END
 }
 
-
+//A function that removes all of the cards that have been used from the players' hands.
 function removeUsedCards() {
     for (var i = 0; i < players.length; i++) {
         if (players[i].selectedCardIndex != -1) {
@@ -318,7 +324,7 @@ function endGame(winner) {
     changeScreenTo('endGame');
 }
 
-
+//A function that updates the score on the host screen.
 function updateScore(tableName) {
     isThereScores = true;
     for(var i = 0; i < players.length; i++) {
