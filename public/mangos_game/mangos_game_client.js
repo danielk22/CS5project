@@ -26,7 +26,7 @@ socket.on('clientDeclareJudge', function(message) { //message is {judge: usernam
 
 socket.on('clientRecieveGreenCard', function(message) { //message is the green card
     document.getElementById('greenCard').innerHTML = `<h4 class="card-title hand-head"> ${message.title}
-            </h4> <p class="card-text"> ${message.descrip} </p>`;
+            </h4> <p class="card-text alt-hand-body"> ${message.descrip} </p>`;
 });
 
 socket.on('clientUpdateHand', function(message) { //message is the player's hand
@@ -60,8 +60,9 @@ function sendToHost(gameID, event, message) {
 function displayHand(hand) {
     str = '';
     for (var i = 0; i < hand.length; i++) {
+        //Image source: https://image.freepik.com/free-vector/mango-cartoon-icon_22350-19.jpg
         str += `<div class="card bg-red"> <div class="card-body text-center" onClick = 
-                "chooseCard(${i})"> <img class="card-img-top" src="redapple.gif" alt="Red Apple image" 
+                "chooseCard(${i})"> <img class="card-img-top" src="mango_prim.jpg" alt="Red Apple image" 
                 > <br/> <h4 class="card-title hand-head"> ${hand[i].title} </h4>
                 <p class="card-text hand-body"> ${hand[i].descrip} </p></div></div>`; 
     }

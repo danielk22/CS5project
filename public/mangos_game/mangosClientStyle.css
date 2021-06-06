@@ -9,16 +9,20 @@
 }
 .hand-body
 {
-    color: white /* contrasts against red card background */
+    color: black /* contrasts against red card background */
+}
+.alt-hand-body
+{
+	color: white
 }
 
 .bg-red
 {
-	background-color: #fc8674
+	background-color: #fbdd82
 }
 .bg-green
 {
-	background-color: #adfca9
+	background-color: #fc8674
 }
 
 body

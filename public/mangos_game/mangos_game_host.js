@@ -182,14 +182,15 @@ function inJudging() {
         changeScreenTo('inJudging');
         turnPhase = tpExpectingJudgeCard;
         startStopWatch(secondsInJudging, 'suspenseMusic', 'timeLeftJudge', noResponseFromJudge);
-        document.getElementById('remindGreenCard').innerHTML = `The green card is:
-                \"${greenCards[currentGreen].title}\" <br> ${greenCards[currentGreen].descrip}`;
+        document.getElementById('remindGreenCard').innerHTML = `<h4 class="card-title hand-head"> 
+            ${greenCards[currentGreen].title} </h4> <p class="card-text alt-hand-body"> 
+            ${greenCards[currentGreen].descrip} </p>`;
         /* above display depreciated */
         str = '';
 
         for (var i = 0; i < selectedCards.length; i++) {
-            str += `<div class="card border-danger bg-red"> <div class="card-body text-center"> 
-            <img class="card-img-top" src="redapple.gif" alt="Red Apple image" 
+            str += `<div class="card bg-red"> <div class="card-body text-center"> 
+            <img class="card-img-top" src="mango_prim.jpg" alt="Red Apple image" 
             > <br/> <h4 class="card-title hand-head"> ${selectedCards[i].title} </h4>
             <p class="card-text hand-body"> ${selectedCards[i].descrip} </p></div></div>`;
         }
@@ -287,7 +288,7 @@ function doNextRound() {
     document.getElementById('judgeDisplay').textContent = `This round's judge is: 
             ${players[judgeIndex].username}`;
     document.getElementById('greenCard').innerHTML = `<h4 class="card-title hand-head"> 
-            ${greenCards[currentGreen].title} </h4> <p class="card-text"> 
+            ${greenCards[currentGreen].title} </h4> <p class="card-text alt-hand-body"> 
             ${greenCards[currentGreen].descrip} </p>`;
     sendToAllPlayers(gameID, 'clientDeclareJudge', {judge: players[judgeIndex].username, round: currentGreen});
     sendToAllPlayers(gameID, 'clientRecieveGreenCard', greenCards[currentGreen]);

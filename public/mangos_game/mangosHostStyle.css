@@ -14,15 +14,20 @@
 }
 .hand-body
 {
+	color: black
+}
+.alt-hand-body
+{
 	color: white
 }
+
 .bg-red
 {
-	background-color: #fc8674
+	background-color: #fbdd82
 }
 .bg-green
 {
-	background-color: #adfca9
+	background-color: #fc8674
 }
 
 body
