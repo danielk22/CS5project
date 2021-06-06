@@ -4,6 +4,8 @@ var username = sessionStorage.getItem('username'); //The client's username
 var isJudge; //Whether or not the player is the judge or not in a given round
 var round; //Integer round number so that that messages sent to host can be tagged with round for validation
 
+const screens = ['pageIntro', 'postSelect', 'inRound', 'postJudging', 'pageReconnect', 'noSelect', 'noJudge'];
+
 changeScreenTo('pageIntro');
 socket.emit('serverClientRedirected', {gameID: gameID, username: username});
 
@@ -44,11 +46,14 @@ socket.on('clientCardsToJudge', function(message) { //message is an array of car
 
 //currently only called when no card selected (correlates to when message = true)
 socket.on('clientPostSelect', function(message) {
-    if(!(document.getElementById('inRound').style.display == 'none')) { //if in round
-        changeScreenTo('noSelect');
-    }
-    else {
-
+    if(document.getElementById('inRound').style.display === 'block') { //if in round
+        console.log('default screen');
+        if(document.getElementById('role').textContent = `${username}'s role is: player`) {
+            changeScreenTo('noSelect');
+        }
+        else { //if role is judge
+            changeScreenTo('noJudge');
+        }
     }
 });
 
@@ -82,7 +87,6 @@ function chooseCard(cardIndex) {
 }
 
 function changeScreenTo(screen) {
-    const screens = ['pageIntro', 'postSelect', 'inRound', 'postJudging', 'pageReconnect'];
     for (var i = 0; i < screens.length; i++) {
         document.getElementById(screens[i]).style.display = (screens[i] === screen ? 'block' : 'none');
     }

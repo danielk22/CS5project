@@ -72,7 +72,7 @@ socket.on('hostReceiveChosenCard', function(message) { //message has a username 
         else if (selectedCards.length == players.length - 2 && quickPickEnabled && players.length > 2) {
             inJudging();
             numConsecTimeOuts = 0;
-            socket.emit('clientPostSelect', true);
+            sendToAllPlayers(gameID, 'clientPostSelect', 0);
         }
     }
 });
@@ -161,6 +161,7 @@ function displayTimeLeft(timerEndFunction, audioTag, clockID) {
     document.getElementById(clockID).textContent = --secondsLeft;
     if (secondsLeft == 0) {
         stopStopWatch(audioTag);
+        sendToAllPlayers(gameID, 'clientPostSelect', 0);
         console.log('timer stopped');
         timerEndFunction();
         if(numConsecTimeOuts == MAX_TIME_OUTS - 1) {
